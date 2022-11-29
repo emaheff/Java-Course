@@ -36,34 +36,38 @@ public class AppController {
     @FXML
     void okBtnPressed(ActionEvent event) {
     	updateStep();
-    	if(state.getMistakes() == MAX_MISTAKES) {
-    		 int ans = JOptionPane.showConfirmDialog(null, "Game over!\nThe word was: " + 
-    				 state.getChosenWord() + "\nDo you want to play again?", "Yow lose!",JOptionPane.YES_NO_OPTION);
-    		 if(ans == 0) {
-    			 resetData();
-    		 }else {
-    			 System.exit(0); // finish the program
-    		 }
-    	}else if(!chosenWord.isUnderLine(state)) {
-    		int ans = JOptionPane.showConfirmDialog(null, "Well done!\nThe word was: " + 
-   				 state.getChosenWord() + "\nDo you want to play again?", "Yow won!",JOptionPane.YES_NO_OPTION);
-    		if(ans == 0) {
-    			resetData();
-   		 	}else {
-   			 System.exit(0); // finish the program
-   		 	}
-    	}
+    	isGameOver();
     }
     
     public void initialize() {
-    	resetData();
+    	newGame();
     }
     
-	private void showCombo(List<String> updateAlphabet) {
-		for(int i = 0; i < updateAlphabet.size(); i++) {
-			lettersCombo.getItems().add(updateAlphabet.get(i));
+    private void isGameOver() {
+    	if(state.getMistakes() == MAX_MISTAKES) {
+   		 	int ans = JOptionPane.showConfirmDialog(null, "Game over!\nThe word was: " + 
+   		 			state.getChosenWord() + "\nDo you want to play again?", "Yow lose!",JOptionPane.YES_NO_OPTION);
+   		 	if(ans == 0) {
+   		 		newGame();
+   		 	}else {
+   		 		System.exit(0); 
+   		 	}
+    	}else if(!chosenWord.isUnderLine(state)) { // the user guessed the word
+    		int ans = JOptionPane.showConfirmDialog(null, "Well done!\nThe word is: " + 
+  				 state.getChosenWord() + "\nDo you want to play again?", "Yow won!",JOptionPane.YES_NO_OPTION);
+    		if(ans == 0) {
+    			newGame();
+  		 	}else {
+  		 		System.exit(0); 
+  		 	}
+    	}
+    }
+    
+	private void showCombo() {
+		for(int i = 0; i < alphabet.getAlphabet().size(); i++) {
+			lettersCombo.getItems().add(alphabet.getAlphabet().get(i));
 		}
-		lettersCombo.setValue(updateAlphabet.get(0));
+		lettersCombo.setValue(alphabet.getAlphabet().get(0));
     }
 	
 	// the method updates the required steps and shows it on the UI
@@ -87,11 +91,11 @@ public class AppController {
     	// update the alphabet - delete used letters from the alphabet and update the comboBox
     	alphabet.update(state);
     	lettersCombo.getItems().removeAll(lettersCombo.getItems());
-     	showCombo(alphabet.getAlphabet());
+    	showCombo();
 	}
 	
-	// the method reset the required steps and shows it on the UI
-	private void resetData() {
+	// the method reset the required fields and shows it on the UI
+	private void newGame() {
 		
 		// clears the canvas in case the user wants to play again
 		gc = canv.getGraphicsContext2D();
@@ -113,6 +117,6 @@ public class AppController {
     	// initialize the comboBox to be the full alphabet
     	alphabet.getFullAlphabet();
     	lettersCombo.getItems().removeAll(lettersCombo.getItems());
-    	showCombo(alphabet.getAlphabet());
+    	showCombo();
 	}
 }
