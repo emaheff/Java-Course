@@ -1,18 +1,18 @@
 
 public class State {
 	
-	private String choosenWord;
-	private String usedLetters = "";
-	private String letter;
-	private String wordToPrint;
+	private String chosenWord;
+	private String usedLetters;
+	private String inputLetter;
+	private String indicationString;
 	private int mistakes;
 
-	public String getChoosenWord() {
-		return choosenWord;
+	public String getChosenWord() {
+		return chosenWord;
 	}
 
-	public void setChoosenWord(String choosenWord) {
-		this.choosenWord = choosenWord;
+	public void setChosenWord(String chosenWord) {
+		this.chosenWord = chosenWord;
 	}
 
 	public String getUsedLetters() {
@@ -23,27 +23,27 @@ public class State {
 		this.usedLetters = usedLetters;
 	}
 
-	public String getLetter() {
-		return letter;
+	public String getInputLetter() {
+		return inputLetter;
 	}
 
-	public void setLetter(String letter) {
-		this.letter = letter;
+	public void setInputLetter(String inputLetter) {
+		this.inputLetter = inputLetter;
 	}
 
 	public int getMistakes() {
 		return mistakes;
 	}
 
-	public void setMistakes(int hangMan) {
-		this.mistakes = hangMan;
+	public void setMistakes(int mistakes) {
+		this.mistakes = mistakes;
 	}
 
-	public String getWordToPrint() {
-		return wordToPrint;
+	public String getIndicationString() {
+		return indicationString;
 	}
 
-	public void setWordToPrint(String wordToPrint) {
-		this.wordToPrint = wordToPrint;
+	public void setIndicationString(String indicationString) {
+		this.indicationString = indicationString;
 	}
 }

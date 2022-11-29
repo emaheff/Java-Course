@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class FileManagement {
 	
+	// the method get the words from the file and contains the words in a list
 	public static List<String> getWordsFromFile() {
 		List<String> wordList = new ArrayList<>();
 		try {
@@ -18,16 +19,5 @@ public class FileManagement {
 			System.out.println("Problam with opening the file");
 		}
 		return wordList;	
-	}
-	
+	}	
 }
-
-
-//File file = new File(".");
-//
-//try {
-//	Scanner scan = new Scanner(file);
-//	wordList.add(scan.nextLine());
-//} catch(IOException e) {
-//	e.printStackTrace();
-//}

@@ -3,10 +3,10 @@ import javafx.scene.paint.Color;
 
 public class HangMan {
 	
-    
+    // the method draw the hang man
 	public void update(State state, GraphicsContext gc, double canvWidth, double canvHeigth) {
 		gc.setStroke(Color.BLACK);
-		gc.setLineWidth(2);
+		gc.setLineWidth(5);
 		if(state.getMistakes() == 1) {
 			gc.strokeLine((canvWidth/12), (canvHeigth/10*9), (canvWidth/12*3), (canvHeigth/10*9));
 		}else if(state.getMistakes() == 2) {

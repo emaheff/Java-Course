@@ -28,25 +28,25 @@ public class AppController {
     private List<String> list = new ArrayList<>();
     private Alphabet alphabet = new Alphabet(list);
     private State state = new State();
-    private ChoosenWord choosenWord = new ChoosenWord();
+    private ChosenWord chosenWord = new ChosenWord();
     private HangMan hangMan = new HangMan();
     private final int MAX_MISTAKES = 10;
     
     
     @FXML
     void okBtnPressed(ActionEvent event) {
-    	updateMove();
+    	updateStep();
     	if(state.getMistakes() == MAX_MISTAKES) {
     		 int ans = JOptionPane.showConfirmDialog(null, "Game over!\nThe word was: " + 
-    				 state.getChoosenWord() + "\nDo you want to play again?", "Yow lose!",JOptionPane.YES_NO_OPTION);
+    				 state.getChosenWord() + "\nDo you want to play again?", "Yow lose!",JOptionPane.YES_NO_OPTION);
     		 if(ans == 0) {
     			 resetData();
     		 }else {
     			 System.exit(0); // finish the program
     		 }
-    	}else if(!choosenWord.isUnderLine(state)) {
+    	}else if(!chosenWord.isUnderLine(state)) {
     		int ans = JOptionPane.showConfirmDialog(null, "Well done!\nThe word was: " + 
-   				 state.getChoosenWord() + "\nDo you want to play again?", "Yow wone!",JOptionPane.YES_NO_OPTION);
+   				 state.getChosenWord() + "\nDo you want to play again?", "Yow won!",JOptionPane.YES_NO_OPTION);
     		if(ans == 0) {
     			resetData();
    		 	}else {
@@ -66,21 +66,22 @@ public class AppController {
 		lettersCombo.setValue(updateAlphabet.get(0));
     }
 	
-	private void updateMove() {
+	// the method updates the required steps and shows it on the UI
+	private void updateStep() {
 		
-		// update the current letter from user
-    	state.setLetter(lettersCombo.getValue()); 
+		// update the input letter from the user
+    	state.setInputLetter(lettersCombo.getValue()); 
     	
     	// update the used letters and shows it on the UI
-    	state.setUsedLetters(state.getUsedLetters() + state.getLetter() +" "); 
+    	state.setUsedLetters(state.getUsedLetters() + state.getInputLetter() +" "); 
     	usedLetters.setText(state.getUsedLetters()); 
     	
-    	// update the word that shows on the UI (the missing letters word (for example - "_ _ a _ v"))
-    	choosenWord.update(state, gc, canv.getWidth(), canv.getHeight());
-    	word.setText(state.getWordToPrint());
+    	// update the string that shows on the UI (the missing letters word (for example - "_ _ a _ v"))
+    	// if needs and shows the result. in addition update the mistake counter if needs.
+    	chosenWord.update(state);
+    	word.setText(state.getIndicationString());
     	
     	// update the draw according to the amount of the mistakes
-    	gc = canv.getGraphicsContext2D();
     	hangMan.update(state, gc, canv.getWidth(), canv.getHeight());
     	
     	// update the alphabet - delete used letters from the alphabet and update the comboBox
@@ -89,27 +90,29 @@ public class AppController {
      	showCombo(alphabet.getAlphabet());
 	}
 	
+	// the method reset the required steps and shows it on the UI
 	private void resetData() {
 		
-		
+		// clears the canvas in case the user wants to play again
 		gc = canv.getGraphicsContext2D();
 		gc.clearRect(0, 0, canv.getWidth(), canv.getHeight());
 		
 		state.setMistakes(0);
 		
-		// get a random word from the file
-    	state.setChoosenWord(choosenWord.getRandomWord());
+		// get a random word from the file and set it in the right field of State
+    	state.setChosenWord(chosenWord.getRandomWord());
     	
-    	state.setWordToPrint(choosenWord.getInitWordToPrint(state.getChoosenWord()));
-    	word.setText(state.getWordToPrint());
+    	// set the indication string and shows it on the UI  
+    	state.setIndicationString(chosenWord.getInitWordToPrint(state.getChosenWord()));
+    	word.setText(state.getIndicationString());
     	
+    	// clears the used letters string in case its not empty (the user wants to play again)
     	state.setUsedLetters("");
     	usedLetters.setText(state.getUsedLetters());
     	
     	// initialize the comboBox to be the full alphabet
-    	alphabet.getFullListLetters();
+    	alphabet.getFullAlphabet();
     	lettersCombo.getItems().removeAll(lettersCombo.getItems());
     	showCombo(alphabet.getAlphabet());
 	}
-	
 }

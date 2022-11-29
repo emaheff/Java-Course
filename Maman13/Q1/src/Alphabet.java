@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Alphabet { //  implements Updateable{
+public class Alphabet {
 	
 	private List<String> alphabet = new ArrayList<>();
 	
@@ -9,20 +9,21 @@ public class Alphabet { //  implements Updateable{
 		this.alphabet = alphabet;
 	}
 
-	
+	// the method remove from the alphabet the letter that the user choose
 	public void update(State state) {
 		for(int i = 0; i < alphabet.size(); i++) {
-    		if(alphabet.get(i).charAt(0) == state.getLetter().charAt(0)) {
+    		if(alphabet.get(i).charAt(0) == state.getInputLetter().charAt(0)) {
     			alphabet.remove(i);
     			break;
     		}
     	}
 	}
 	
-	public List<String> getFullListLetters() {
-		while(!alphabet.isEmpty()) {
-			alphabet.remove(0);
-		}
+	// the name of the method speak by itself
+	public List<String> getFullAlphabet() {
+		// clears the list in case the user wants to play again and there are letters that remains
+		alphabet.clear();
+		
     	alphabet.add("a");
     	alphabet.add("b");
     	alphabet.add("c");
