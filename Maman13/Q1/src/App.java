@@ -15,7 +15,7 @@ public class App extends Application{
 		stage.setScene(scene);
 		stage.show();
 	}
-	State state = new State();
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
