@@ -6,13 +6,6 @@ public class State {
 	private String letter;
 	private String wordToPrint;
 	private int mistakes;
-	
-//	public State(String choosenWord, String usedLetters, String letter, int hangMan) {
-//		this.choosenWord = choosenWord;
-//		this.usedLetters = usedLetters;
-//		this.letter = letter;
-//		this.hangMan = hangMan;
-//	}
 
 	public String getChoosenWord() {
 		return choosenWord;

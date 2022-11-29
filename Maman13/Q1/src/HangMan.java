@@ -1,9 +1,9 @@
-import javax.swing.JOptionPane;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class HangMan {
+	
+    
 	public void update(State state, GraphicsContext gc, double canvWidth, double canvHeigth) {
 		gc.setStroke(Color.BLACK);
 		gc.setLineWidth(2);
@@ -27,10 +27,6 @@ public class HangMan {
 			gc.strokeLine((canvWidth/12*7), (canvHeigth/10*7), (canvWidth/12*6), (canvHeigth/10*8));
 		}else if(state.getMistakes() == 10) {
 			gc.strokeLine((canvWidth/12*7), (canvHeigth/10*7), (canvWidth/12*8), (canvHeigth/10*8));
-			
-			JOptionPane.showMessageDialog(null, "Game over!\nThe word was: " + state.getChoosenWord());
-   		 	System.exit(0); // finish the program
-   		 	
 		}
 	}
 }

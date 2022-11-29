@@ -1,8 +1,8 @@
 import java.util.List;
+import javafx.scene.canvas.GraphicsContext;
 
-import javax.swing.JOptionPane;
 
-public class ChoosenWord implements Updateable{
+public class ChoosenWord {// implements Updateable{
 	
 	private List<String> words = FileManagement.getWordsFromFile();
 	
@@ -15,7 +15,10 @@ public class ChoosenWord implements Updateable{
 	}
 	
 	public String getRandomWord() {
-		return words.get(getRandomElement());
+		int i = getRandomElement();
+		String randomWord = words.get(i);
+		words.remove(i);
+		return randomWord;
 	}
 	
 	private int getRandomElement() {
@@ -23,7 +26,7 @@ public class ChoosenWord implements Updateable{
     }
 	
 	
-	public void update(State state){
+	public void update(State state, GraphicsContext gc, double canvWidth, double canvHeigth){
 		boolean isCorrectLetter = false;
 		for(int i = 0; i < state.getChoosenWord().length(); i++) {
 			if((state.getLetter().charAt(0)) == (state.getChoosenWord().charAt(i))) {
@@ -34,17 +37,16 @@ public class ChoosenWord implements Updateable{
 		if(!isCorrectLetter) {
 			state.setMistakes(state.getMistakes()+1);
 		}
-		
+	}
+	
+	public boolean isUnderLine(State state) {
 		boolean isUnderLine = false;
 		for(int i = 0; i < state.getWordToPrint().length(); i++) {
 			if(state.getWordToPrint().charAt(i) == '_') {
 				isUnderLine = true;
 			}
 		}
-		if(!isUnderLine) {
-			JOptionPane.showMessageDialog(null, "Well done! You guessed correctly the word\nthe word is: " + state.getChoosenWord());
-			System.exit(0); // finish the program
-		}
+		return isUnderLine;
 	}
 	
 	private String setLetterInWordToPrint(char letter, int i, String wordToPrint) {
@@ -55,12 +57,17 @@ public class ChoosenWord implements Updateable{
 	
 }
 
-//StringBuilder choosenWord = new StringBuilder("");
-//for(int i = 0; i < word.length(); i++) {
-//	choosenWord.setCharAt(i, '_');
+//int ans = JOptionPane.showConfirmDialog(null, "Well done!\nThe word is: " + state.getChoosenWord() + "\nDo you want to play again?");
+//if(ans == 0) {
+//	state.setMistakes(0);
+//	state.setChoosenWord(getRandomWord());
+//	state.setUsedLetters("");
+//	state.setWordToPrint(getInitWordToPrint(state.getChoosenWord()));
+//	gc.clearRect(0, 0, canvWidth, canvHeigth);
+//	alphabet.getFullListLetters();
+//	lettersCombo.getItems().removeAll(lettersCombo.getItems());
+//	ac.showCombo(alphabet.getAlphabet());
+//	
+//}else {
+//	System.exit(0); // finish the program
 //}
-//return choosenWord.toString();
-
-
-//choosenWord.setCharAt(i, state.getLetter().charAt(0));
-//state.setWordToPrint(choosenWord);

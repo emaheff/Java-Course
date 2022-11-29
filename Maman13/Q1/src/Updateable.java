@@ -1,4 +1,4 @@
-
-public interface Updateable {
-	void update(State s);
-}
+//
+//public interface Updateable {
+//	void update(State s);
+//}

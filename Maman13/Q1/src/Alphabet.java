@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Alphabet implements Updateable{
+public class Alphabet { //  implements Updateable{
 	
 	private List<String> alphabet = new ArrayList<>();
 	
@@ -20,6 +20,9 @@ public class Alphabet implements Updateable{
 	}
 	
 	public List<String> getFullListLetters() {
+		while(!alphabet.isEmpty()) {
+			alphabet.remove(0);
+		}
     	alphabet.add("a");
     	alphabet.add("b");
     	alphabet.add("c");
