@@ -10,7 +10,7 @@ public class FileReader {
 		public  List<String> getAllLines() {
 			List<String> lines = new ArrayList<>();
 			try {
-				Scanner scan = new Scanner(new File("C:\\Users\\DELL\\code\\java\\Maman13_Q2\\src\\TriviaQuestionsJava.txt"));
+				Scanner scan = new Scanner(new File("C:\\Users\\DELL\\code\\java\\Maman13_Q2\\src\\TriviaQuestionsJavaTest.txt"));
 				while(scan.hasNext()) {
 					lines.add(scan.nextLine());
 				}
@@ -21,5 +21,3 @@ public class FileReader {
 			return lines;	
 		}	
 }
-
-

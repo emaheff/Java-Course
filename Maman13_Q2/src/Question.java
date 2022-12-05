@@ -27,12 +27,4 @@ public class Question {
 	public List<String> getAnswers() {	
 		return answers;
 	}
-
-	@Override
-	public String toString() {
-		return "Question:\n q = " + q + "\ncorrectAns = " + correctAns + "\nanswers 2 = " + answers.get(0) +
-				"\nanswer 3 = " + answers.get(1) + "\nanswer 4 = " + answers.get(2) ;
-	}
-	
-	
 }

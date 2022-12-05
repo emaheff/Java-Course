@@ -11,7 +11,8 @@ public class QuestionBuilder {
 		this.lines = lines;
 	}
 	
-	// the method takes a bunch of (5) lines and set them as attributes of the object question
+	// the method take the list of lists from getQuestionPartitions() method and convert it to 
+	// a list of the object question
 	public List<Question> getAllQuestions(){
 		List<List<String>> questionPartitions = getQuestionPartitions();
 		List<Question> questions = new ArrayList<>(); 
@@ -28,11 +29,12 @@ public class QuestionBuilder {
 		 return questions;
 	}
 	
+	//the method creates a main list of lists of 5 items each inner list 
 	private List<List<String>> getQuestionPartitions(){
 		 List<List<String>> questionPartitions = new ArrayList<>();
 
 		    for (int i=0; i<lines.size(); i +=  QUESTION_PARTITION_SIZE) {
-		    	questionPartitions.add(lines.subList(i, Math.min(i +  QUESTION_PARTITION_SIZE, lines.size())));
+		    	questionPartitions.add(lines.subList(i, Math.min(i +  QUESTION_PARTITION_SIZE, lines.size()))); // Math min prevent access to items out of borders
 		    }
 		    return questionPartitions;
 	}
