@@ -25,6 +25,7 @@ public class AppController {
 
     @FXML
     private Label word;
+    
     private GraphicsContext gc;
     private List<String> list = new ArrayList<>();
     private Alphabet alphabet = new Alphabet(list);
@@ -46,6 +47,7 @@ public class AppController {
     
     private void isGameOver() {
     	if(state.getMistakes() == MAX_MISTAKES) {
+    		JOptionPane.showMessageDialog(null, "Game over!");
    		 	int ans = JOptionPane.showConfirmDialog(null, "Game over!\nThe word was: " + 
    		 			state.getChosenWord() + "\nDo you want to play again?", "Yow lose!",JOptionPane.YES_NO_OPTION);
    		 	if(ans == 0) {

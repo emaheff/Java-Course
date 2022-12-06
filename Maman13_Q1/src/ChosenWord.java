@@ -17,14 +17,12 @@ public class ChosenWord {
 	
 	// get a random word from the list (the list contains strings from the file)
 	public String getRandomWord() {
-		int i = getRandomElement();
-		String randomWord = words.get(i);
-		words.remove(i);
-		return randomWord;
+		int index = getRandomIndex();		
+		return words.remove(index);
 	}
 	
-	// get a random index from in the range of the list of words
-	private int getRandomElement() {
+	// get a random index in the range of the list of words
+	private int getRandomIndex() {
     	return (int)(Math.random() * words.size());
     }
 	
@@ -35,12 +33,16 @@ public class ChosenWord {
 			if((state.getInputLetter().charAt(0)) == (state.getChosenWord().charAt(i))) {
 				isCorrectLetter = true;
 				// update the string that indicate the user.
-				state.setIndicationString(indicationStringToShow(state.getInputLetter().charAt(0), i, state.getIndicationString()));
+				String wordToPrint = state.getIndicationString();
+				char letter = state.getInputLetter().charAt(0);
+				String indication = indicationStringToShow(letter, i, wordToPrint);
+				state.setIndicationString(indication);
 			}
 		}
 		// adds a mistake to the counter
 		if(!isCorrectLetter) {
-			state.setMistakes(state.getMistakes()+1);
+			int mistakes = state.getMistakes();
+			state.setMistakes(mistakes +1);
 		}
 	}
 	

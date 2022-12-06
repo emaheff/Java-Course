@@ -12,7 +12,7 @@ public class Alphabet {
 	// the method remove from the alphabet the letter that the user choose
 	public void update(State state) {
 		for(int i = 0; i < alphabet.size(); i++) {
-    		if(alphabet.get(i).charAt(0) == state.getInputLetter().charAt(0)) {
+			if(alphabet.get(i).charAt(0) == state.getInputLetter().charAt(0)) {
     			alphabet.remove(i);
     			break;
     		}
