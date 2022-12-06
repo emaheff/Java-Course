@@ -10,7 +10,7 @@ public class FileManagement {
 	public static List<String> getWordsFromFile() {
 		List<String> wordList = new ArrayList<>();
 		try {
-			Scanner scan = new Scanner(new File("C:\\Users\\DELL\\code\\java\\Maman13_Q1\\src\\hangManFile.txt"));
+			Scanner scan = new Scanner(new File("hangManFile.txt"));
 			while(scan.hasNext()) {
 				wordList.add(scan.next());
 			}
