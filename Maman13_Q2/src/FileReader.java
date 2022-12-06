@@ -10,9 +10,11 @@ public class FileReader {
 		public  List<String> getAllLines() {
 			List<String> lines = new ArrayList<>();
 			try {
-				Scanner scan = new Scanner(new File("TriviaQuestionsJava.txt")); // if you want a tester use - "TriviaQuestionsJavaTester.txt"
+				File file = new File("TriviaQuestionsJava.txt"); // if you want a tester use - "TriviaQuestionsJavaTester.txt"
+				Scanner scan = new Scanner(file); 
 				while(scan.hasNext()) {
-					lines.add(scan.nextLine());
+					String line = scan.nextLine();
+					lines.add(line);
 				}
 				scan.close();
 			} catch (FileNotFoundException e) {

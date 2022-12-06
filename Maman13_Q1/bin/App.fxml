@@ -18,7 +18,7 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label fx:id="word" prefHeight="45.0" prefWidth="484.0" />
+            <Label fx:id="wordLabel" prefHeight="45.0" prefWidth="484.0" />
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="69.0" prefWidth="600.0">
@@ -39,7 +39,7 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label fx:id="usedLetters" prefHeight="43.0" prefWidth="466.0" />
+            <Label fx:id="usedLettersLabel" prefHeight="43.0" prefWidth="466.0" />
          </children>
       </HBox>
    </children>

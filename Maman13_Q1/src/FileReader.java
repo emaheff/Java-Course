@@ -4,20 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class FileManagement {
+public class FileReader {
 	
 	// the method get the words from the file and contains the words in a list
 	public static List<String> getWordsFromFile() {
-		List<String> wordList = new ArrayList<>();
+		List<String> wordsList = new ArrayList<>();
 		try {
-			Scanner scan = new Scanner(new File("hangManFile.txt"));
+			File file = new File("hangManFile.txt");
+			Scanner scan = new Scanner(file);
 			while(scan.hasNext()) {
-				wordList.add(scan.next());
+				String word = scan.next();
+				wordsList.add(word);
 			}
 			scan.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("Problam with opening the file");
 		}
-		return wordList;	
+		return wordsList;	
 	}	
 }

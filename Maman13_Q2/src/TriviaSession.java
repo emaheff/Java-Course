@@ -4,13 +4,13 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-public class GameSession {
+public class TriviaSession {
 	
 	private Iterator<Question> questionsIterator;
 	private Question question;
 	private int score;
 	
-	public GameSession() {
+	public TriviaSession() {
 		FileReader fr = new FileReader();
 		List<String> lines = fr.getAllLines();
 		QuestionBuilder qb = new QuestionBuilder(lines);

@@ -4,10 +4,10 @@ import java.util.List;
 public class ChosenWord {
 	
 	// create a list with all words from the file
-	private List<String> words = FileManagement.getWordsFromFile();
+	private List<String> words = FileReader.getWordsFromFile();
 	
 	// create a string with '_' instead of the letters
-	public String getInitWordToPrint(String word) {
+	public String getStringWithUnderLines(String word) {
 		String str = "";
 		for(int i = 0; i < word.length(); i++) {
 			str += "_ ";
@@ -28,10 +28,10 @@ public class ChosenWord {
 	
 	// checks if the chosen (random) word contain the letter that the user choose   
 	public void update(State state){
-		boolean isCorrectLetter = false;
+		char letterToCheck = state.getInputLetter().charAt(0);
+		String currentWord = state.getChosenWord();
 		for(int i = 0; i < state.getChosenWord().length(); i++) {
-			if((state.getInputLetter().charAt(0)) == (state.getChosenWord().charAt(i))) {
-				isCorrectLetter = true;
+			if(letterToCheck == currentWord.charAt(i)) {
 				// update the string that indicate the user.
 				String wordToPrint = state.getIndicationString();
 				char letter = state.getInputLetter().charAt(0);
@@ -39,22 +39,27 @@ public class ChosenWord {
 				state.setIndicationString(indication);
 			}
 		}
-		// adds a mistake to the counter
-		if(!isCorrectLetter) {
-			int mistakes = state.getMistakes();
-			state.setMistakes(mistakes +1);
+	}
+	
+	public boolean isCorrectLetter(State state) {
+		char letterToCheck = state.getInputLetter().charAt(0);
+		String currentWord = state.getChosenWord();
+		for(int i = 0; i < currentWord.length(); i++) {
+			if(letterToCheck  == currentWord.charAt(i)) {
+				return true;
+			}
 		}
+		return false;
 	}
 	
 	// checks if there are any '_' in the string that indicate the user
 	public boolean isUnderLine(State state) {
-		boolean isUnderLine = false;
 		for(int i = 0; i < state.getIndicationString().length(); i++) {
 			if(state.getIndicationString().charAt(i) == '_') {
-				isUnderLine = true;
+				return true;
 			}
 		}
-		return isUnderLine;
+		return false;
 	}
 	
 	// the method set the given char in the given string at the index place

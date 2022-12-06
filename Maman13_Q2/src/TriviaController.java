@@ -19,7 +19,7 @@ public class TriviaController {
     @FXML
     private Label scoreLabel;
     
-    private GameSession session = new GameSession();
+    private TriviaSession session = new TriviaSession();
     private Font font = new Font("Ariel", 24);
 	
     @FXML
@@ -53,7 +53,7 @@ public class TriviaController {
     }
     
     public void initialize() {
-    	session = new GameSession(); // new gameSession in case its not the first game
+    	session = new TriviaSession(); // new gameSession in case its not the first game
     	qLabel.setFont(font);
     	scoreLabel.setFont(font);
     	displayQuestion();
