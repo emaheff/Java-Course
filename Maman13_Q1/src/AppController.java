@@ -1,12 +1,14 @@
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JOptionPane;
+import java.util.Optional;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
@@ -32,6 +34,11 @@ public class AppController {
 	private State state = new State();
 	private ChosenWord chosenWord = new ChosenWord();
 	private HangMan hangMan = new HangMan();
+	private Alert alert = new Alert(AlertType.INFORMATION);
+	private ButtonType buttonTypeYes = new ButtonType("Yes");
+	private ButtonType buttonTypeNo = new ButtonType("No");
+	private ButtonType buttonTypeOK = new ButtonType("OK");
+	
 	
 	private static final int MAX_MISTAKES = 10;
 	private Font font = new Font("Ariel", 24);
@@ -55,24 +62,33 @@ public class AppController {
 		usedLettersLabel.setFont(font);
 		newGame();
 		displaySession();
-
 	}
 
 	private boolean isGameOver() {
+		alert.getButtonTypes().clear();
+		alert.getButtonTypes().setAll(buttonTypeOK);
+		alert.setHeaderText(null);
 		if(state.getMistakes() == MAX_MISTAKES) {
-			JOptionPane.showMessageDialog(null, "Game over!\nThe word was: " + state.getChosenWord());
+			alert.setTitle("Game Over!");
+			alert.setContentText("You lost!\nThe word was " + state.getChosenWord());
+			alert.showAndWait();
 			return true;
 		}else if(!chosenWord.isUnderLine(state.getIndicationString())) { // the user guessed the word
-			JOptionPane.showMessageDialog(null, "Well Done!\nYou guessed the word: " + state.getChosenWord() 
-			+ " correctly!");
+			alert.setTitle("Well Done!");
+			alert.setContentText("You won!\nThe word is " + state.getChosenWord());
+			alert.showAndWait();
 			return true;
 		}
 		return false;
 	}
 
 	private boolean isNewGame() {
-		int ans = JOptionPane.showConfirmDialog(null, "Do you want to play again?", null ,JOptionPane.YES_NO_OPTION);
-		if(ans == 0) {
+		alert.getButtonTypes().clear();
+		alert.setTitle("Play Again?");
+		alert.setContentText("Do you want to play again?");
+		alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+		Optional<ButtonType> result = alert.showAndWait();
+		if(result.get() == buttonTypeYes) {	
 			return true;
 		}
 		return false;

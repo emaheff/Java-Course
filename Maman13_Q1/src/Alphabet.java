@@ -3,6 +3,7 @@ import java.util.List;
 
 public class Alphabet {
 	
+	private static final int NUMBER_OF_LETTERS = 26;
 	private List<Character> alphabet = new ArrayList<>();
 	
 	// a builder. do i need a builder?
@@ -24,33 +25,10 @@ public class Alphabet {
 	public List<Character> getFullAlphabet() {
 		// clears the list in case the user wants to play again and there are letters that remains
 		alphabet.clear();
-		
-    	alphabet.add('a');
-    	alphabet.add('b');
-    	alphabet.add('c');
-    	alphabet.add('d');
-    	alphabet.add('e');
-    	alphabet.add('f');
-    	alphabet.add('g');
-    	alphabet.add('h');
-    	alphabet.add('i');
-    	alphabet.add('j');
-    	alphabet.add('k');
-    	alphabet.add('l');
-    	alphabet.add('m');
-    	alphabet.add('n');
-    	alphabet.add('o');
-    	alphabet.add('p');
-    	alphabet.add('q');
-    	alphabet.add('r');
-    	alphabet.add('s');
-    	alphabet.add('t');
-    	alphabet.add('u');
-    	alphabet.add('v');
-    	alphabet.add('w');
-    	alphabet.add('x');
-    	alphabet.add('y');
-    	alphabet.add('z');
+		for(int i = 0; i < NUMBER_OF_LETTERS; i++) {
+			char letter = (char)(i + 97); // a is 97 in ASCII 
+			alphabet.add(letter);
+		}
     	return alphabet;
     }
 

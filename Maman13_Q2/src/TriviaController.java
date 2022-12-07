@@ -1,11 +1,14 @@
 import java.util.List;
+import java.util.Optional;
 
-import javax.swing.JOptionPane;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Font;
 
 public class TriviaController {
@@ -21,10 +24,14 @@ public class TriviaController {
     
     private TriviaSession session = new TriviaSession();
     private Font font = new Font("Ariel", 24);
+    private Alert alert = new Alert(AlertType.INFORMATION);
+	private ButtonType buttonTypeYes = new ButtonType("Yes");
+	private ButtonType buttonTypeNo = new ButtonType("No");
+	private ButtonType buttonTypeOK = new ButtonType("OK");
 	
     @FXML
     void exitBtn(ActionEvent event) {
-    	JOptionPane.showMessageDialog(null, "Your final score: " + session.getScore());
+    	displayScore();
     	System.exit(0);
     }
 
@@ -35,10 +42,13 @@ public class TriviaController {
     	session.addUserAnswer(userInput); 
     	scoreLabel.setText("" + session.getScore()); // display the score of the game
     	if(!session.hasMoreQuestions()) { 
-    		int ans = JOptionPane.showConfirmDialog(null, "No more questions.\nYour final score: " + session.getScore() +
-                    "\nDo you want to play again?", "No more questions",JOptionPane.YES_NO_OPTION);
-    		if(ans == 0) { // the user pressed on "Yes" button - start a new game
-    	    	initialize();
+    		alert.getButtonTypes().clear();
+    		alert.setTitle("No more questions");
+    		alert.setContentText("Your final score is " + session.getScore() +"\nDo you want to play again?");
+    		alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+    		Optional<ButtonType> result = alert.showAndWait();
+    		if(result.get() == buttonTypeYes) {
+    			initialize();	    	
     		}else {
     		System.exit(0);
     		}
@@ -48,8 +58,17 @@ public class TriviaController {
 
     @FXML
     void playAgainBtn(ActionEvent event) {
-    	JOptionPane.showMessageDialog(null, "Your final score: " + session.getScore());
+    	displayScore();
     	initialize();
+    }
+    
+    private void displayScore() {
+    	alert.getButtonTypes().clear();
+		alert.getButtonTypes().setAll(buttonTypeOK);
+		alert.setHeaderText(null);
+		alert.setTitle(null);
+		alert.setContentText("Your final score is " + session.getScore());
+		alert.showAndWait();
     }
     
     public void initialize() {

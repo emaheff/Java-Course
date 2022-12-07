@@ -2,13 +2,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.JOptionPane;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 
 public class TriviaSession {
 	
 	private Iterator<Question> questionsIterator;
 	private Question question;
 	private int score;
+	private Alert alert = new Alert(AlertType.INFORMATION);
+	private ButtonType buttonTypeOK = new ButtonType("OK");
 	
 	public TriviaSession() {
 		FileReader fr = new FileReader();
@@ -23,10 +27,20 @@ public class TriviaSession {
 		String correctAns = question.getA();
 		if(correctAns.equals(userInput)) {
 			score += 10;
-			JOptionPane.showMessageDialog(null, "Correct answer!");
+			alert.getButtonTypes().clear();
+			alert.getButtonTypes().setAll(buttonTypeOK);
+			alert.setHeaderText(null);
+			alert.setTitle(null);
+			alert.setContentText("Correct answer!");
+			alert.showAndWait();
 		}else {
 			score -= 5;
-			JOptionPane.showMessageDialog(null, "Wrong answer!");
+			alert.getButtonTypes().clear();
+			alert.getButtonTypes().setAll(buttonTypeOK);
+			alert.setHeaderText(null);
+			alert.setTitle(null);
+			alert.setContentText("Wrong answer!");
+			alert.showAndWait();
 		}
 	}
 

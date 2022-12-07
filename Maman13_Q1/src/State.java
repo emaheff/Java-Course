@@ -23,10 +23,6 @@ public class State {
 		this.usedLetters = usedLetters;
 	}
 
-	public char getInputLetter() {
-		return inputLetter;
-	}
-
 	public void setInputLetter(char inputLetter) {
 		this.inputLetter = inputLetter;
 	}
