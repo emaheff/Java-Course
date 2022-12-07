@@ -18,7 +18,7 @@ public class AppController {
 	private Canvas canv;
 
 	@FXML
-	private ComboBox<String> lettersCombo;
+	private ComboBox<Character> lettersCombo;
 
 	@FXML
 	private Label usedLettersLabel;
@@ -27,11 +27,12 @@ public class AppController {
 	private Label wordLabel;
 
 	private GraphicsContext gc;
-	private List<String> list = new ArrayList<>();
+	private List<Character> list = new ArrayList<>();
 	private Alphabet alphabet = new Alphabet(list);
 	private State state = new State();
 	private ChosenWord chosenWord = new ChosenWord();
 	private HangMan hangMan = new HangMan();
+	
 	private static final int MAX_MISTAKES = 10;
 	private Font font = new Font("Ariel", 24);
 
@@ -40,12 +41,6 @@ public class AppController {
 	void okBtnPressed(ActionEvent event) {
 		updateSession();
 		displaySession();
-//		System.out.println("yoohoo");
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
 		if(isGameOver()) {
 			if(isNewGame()) {
 				initialize();
@@ -67,7 +62,7 @@ public class AppController {
 		if(state.getMistakes() == MAX_MISTAKES) {
 			JOptionPane.showMessageDialog(null, "Game over!\nThe word was: " + state.getChosenWord());
 			return true;
-		}else if(!chosenWord.isUnderLine(state)) { // the user guessed the word
+		}else if(!chosenWord.isUnderLine(state.getIndicationString())) { // the user guessed the word
 			JOptionPane.showMessageDialog(null, "Well Done!\nYou guessed the word: " + state.getChosenWord() 
 			+ " correctly!");
 			return true;
@@ -83,19 +78,12 @@ public class AppController {
 		return false;
 	}
 
-	private void showCombo() {
-		List<String> correntAlphabet =  alphabet.getAlphabet();
-		for(String letter: correntAlphabet) {
-			lettersCombo.getItems().add(letter);
-		}
-		lettersCombo.setValue(correntAlphabet.get(0));
-	}
-
 	// the method updates the required steps
 	private void updateSession() {
+		String currentWord = state.getChosenWord();
 
 		// update the input letter from the user
-		String inputLetter = lettersCombo.getValue();
+		char inputLetter = lettersCombo.getValue();
 		state.setInputLetter(inputLetter); 
 
 		// update the used letters 
@@ -103,16 +91,16 @@ public class AppController {
 		state.setUsedLetters(usedLetters + inputLetter +" "); 
 
 		// update the string that shows on the UI (the missing letters word (for example - "_ _ a _ v"))
-		chosenWord.update(state);
-
-		// update the draw according to the amount of the mistakes
-		if(!chosenWord.isCorrectLetter(state)) {
+		if(chosenWord.isLetterInWord(inputLetter, currentWord)) {
+			String indicationWord = chosenWord.indicationWordToDisplay(inputLetter, state.getIndicationString(), currentWord);
+			state.setIndicationString(indicationWord);
+		}else { // update the mistakes counter
 			int currentMistakes = state.getMistakes();
 			state.setMistakes(currentMistakes + 1);
 		}
 
-		// update the alphabet - delete used letters from the alphabet and update the comboBox
-		alphabet.update(state);
+		// update the alphabet - delete used letter from the alphabet
+		alphabet.updateAlphabet(inputLetter);
 	}
 
 	// the method display the data on the UI
@@ -123,7 +111,7 @@ public class AppController {
 		String usedLetters = state.getUsedLetters();
 		usedLettersLabel.setText(usedLetters);
 
-		hangMan.update(state, gc, canv.getWidth(), canv.getHeight());
+		hangMan.draw(state.getMistakes(), gc, canv.getWidth(), canv.getHeight());
 
 		lettersCombo.getItems().removeAll(lettersCombo.getItems());
 		showCombo();
@@ -138,12 +126,11 @@ public class AppController {
 
 		state.setMistakes(0);
 
-		// get a random word from the file and set it in the right field of State
-		String randomWord = chosenWord.getRandomWord();
-		state.setChosenWord(randomWord);
-
-		// set the indication string and shows it on the UI  
-		String currentWord = state.getChosenWord();
+		// get a random word from the list of words and set it on the right field of State
+		String currentWord = chosenWord.getRandomWord();
+		state.setChosenWord(currentWord);
+		
+		// make a string with '_' instead of the letters in the chosen word and set it on the right field of State
 		String StringWithUnderLines = chosenWord.getStringWithUnderLines(currentWord);
 		state.setIndicationString(StringWithUnderLines);
 
@@ -152,5 +139,13 @@ public class AppController {
 
 		// initialize the comboBox to be the full alphabet
 		alphabet.getFullAlphabet();
+	}
+	
+	private void showCombo() {
+		List<Character> correntAlphabet =  alphabet.getCurrentAlphabet();
+		for(Character letter: correntAlphabet) {			
+			lettersCombo.getItems().add(letter);
+		}
+		lettersCombo.setValue(correntAlphabet.get(0));
 	}
 }

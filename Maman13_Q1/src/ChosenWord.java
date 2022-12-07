@@ -26,26 +26,19 @@ public class ChosenWord {
     	return (int)(Math.random() * words.size());
     }
 	
-	// checks if the chosen (random) word contain the letter that the user choose   
-	public void update(State state){
-		char letterToCheck = state.getInputLetter().charAt(0);
-		String currentWord = state.getChosenWord();
-		for(int i = 0; i < state.getChosenWord().length(); i++) {
-			if(letterToCheck == currentWord.charAt(i)) {
-				// update the string that indicate the user.
-				String wordToPrint = state.getIndicationString();
-				char letter = state.getInputLetter().charAt(0);
-				String indication = indicationStringToShow(letter, i, wordToPrint);
-				state.setIndicationString(indication);
+	private int leterPositionInWord(char letter, String chosenWord) {
+		int index = -1;
+		for(int i = 0; i < chosenWord.length(); i++) {
+			if(letter == chosenWord.charAt(i)) {
+				index = i;
 			}
 		}
+		return index;
 	}
 	
-	public boolean isCorrectLetter(State state) {
-		char letterToCheck = state.getInputLetter().charAt(0);
-		String currentWord = state.getChosenWord();
-		for(int i = 0; i < currentWord.length(); i++) {
-			if(letterToCheck  == currentWord.charAt(i)) {
+	public boolean isLetterInWord(char letter, String chosenWord) {
+		for(int i = 0; i < chosenWord.length(); i++) {
+			if(letter == chosenWord.charAt(i)) {
 				return true;
 			}
 		}
@@ -53,9 +46,9 @@ public class ChosenWord {
 	}
 	
 	// checks if there are any '_' in the string that indicate the user
-	public boolean isUnderLine(State state) {
-		for(int i = 0; i < state.getIndicationString().length(); i++) {
-			if(state.getIndicationString().charAt(i) == '_') {
+	public boolean isUnderLine(String indicationString) {
+		for(int i = 0; i < indicationString.length(); i++) {
+			if(indicationString.charAt(i) == '_') {
 				return true;
 			}
 		}
@@ -63,7 +56,8 @@ public class ChosenWord {
 	}
 	
 	// the method set the given char in the given string at the index place
-	private String indicationStringToShow(char letter, int i, String wordToPrint) {
+	public String indicationWordToDisplay(char letter, String wordToPrint, String chosenWord) {
+		int i = leterPositionInWord(letter, chosenWord);
 		i += i; 
 		wordToPrint = wordToPrint.substring(0, i) + letter + wordToPrint.substring(i+1);
 		return wordToPrint;
