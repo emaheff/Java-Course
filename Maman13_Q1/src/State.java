@@ -3,7 +3,6 @@ public class State {
 	
 	private String chosenWord;
 	private String usedLetters;
-	private char inputLetter;
 	private String indicationString;
 	private int mistakes;
 
@@ -23,9 +22,6 @@ public class State {
 		this.usedLetters = usedLetters;
 	}
 
-	public void setInputLetter(char inputLetter) {
-		this.inputLetter = inputLetter;
-	}
 
 	public int getMistakes() {
 		return mistakes;

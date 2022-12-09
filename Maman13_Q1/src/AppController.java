@@ -100,7 +100,6 @@ public class AppController {
 
 		// update the input letter from the user
 		char inputLetter = lettersCombo.getValue();
-		state.setInputLetter(inputLetter); 
 
 		// update the used letters 
 		String usedLetters = state.getUsedLetters();

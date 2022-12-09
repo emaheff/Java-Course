@@ -25,20 +25,16 @@ public class TriviaSession {
 	// the method checks if the answer is correct and displays it to the user
 	public void addUserAnswer(String userInput) {
 		String correctAns = question.getA();
+		alert.getButtonTypes().clear();
+		alert.getButtonTypes().setAll(buttonTypeOK);
+		alert.setHeaderText(null);
+		alert.setTitle(null);
 		if(correctAns.equals(userInput)) {
 			score += 10;
-			alert.getButtonTypes().clear();
-			alert.getButtonTypes().setAll(buttonTypeOK);
-			alert.setHeaderText(null);
-			alert.setTitle(null);
 			alert.setContentText("Correct answer!");
 			alert.showAndWait();
 		}else {
 			score -= 5;
-			alert.getButtonTypes().clear();
-			alert.getButtonTypes().setAll(buttonTypeOK);
-			alert.setHeaderText(null);
-			alert.setTitle(null);
 			alert.setContentText("Wrong answer!");
 			alert.showAndWait();
 		}
