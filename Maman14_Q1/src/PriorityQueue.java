@@ -1,64 +1,55 @@
-import java.util.ArrayList;
+
 import java.util.Iterator;
+import java.util.LinkedList;
 
 
-public class PriorityQueue<T> implements Iterator<T>{
+public class PriorityQueue<T> {
     private static int MAX_PRIORITY_SIZE = 10;
     private int prioritySize;
-    private ArrayList<T>[] priorityQueue;
+    private LinkedList<T>[] priorityQueue;
 
-    public ArrayList<T>[] getPriorityQueue() {
-        return priorityQueue;
-    }
-
-    // a constructor
     public PriorityQueue(int prioritySize) {
-        if (prioritySize < 1 || prioritySize > MAX_PRIORITY_SIZE) {
-            this.prioritySize = MAX_PRIORITY_SIZE;
-        } else {
-            this.prioritySize = prioritySize;
+        if (prioritySize < 1 ) {
+            this.prioritySize = 1;
+        }else {
+            this.prioritySize =  Math.min(prioritySize, MAX_PRIORITY_SIZE);
         }
-        priorityQueue = new ArrayList[prioritySize];
+        priorityQueue = new LinkedList[this.prioritySize];
         for (int i = 0; i < this.prioritySize; i++){
-            priorityQueue[i] = new ArrayList<T>();
+            priorityQueue[i] = new LinkedList<T>();
         }
     }
     public void add(T element, int priority){
-        if (priority < 1 || priority > prioritySize){
-            priorityQueue[prioritySize - 1].add(element);
-        }
-        else {
-            priorityQueue[priority - 1].add(element);
+        if (priority < 1){
+            priorityQueue[0].add(element);
+        } else{
+            int i = Math.min(priority,prioritySize);
+            priorityQueue[i-1].add(element);
         }
     }
 
     public T poll(){
-        for (int i = 0; i < prioritySize; i++){
-            if (!priorityQueue[i].isEmpty()){
-                return priorityQueue[i].get(0);
+        for (LinkedList<T> queue: priorityQueue){
+            if (!queue.isEmpty()) {
+                return queue.get(0);
             }
         }
         return null;
     }
 
     public boolean contains(T element){
-        for (int i = 0; i < prioritySize; i++){
-            for (int j = 0; j < priorityQueue[i].size(); j++){
-                if (priorityQueue[i].get(j).equals(element)){
-                    return true;
-                }
+        for (LinkedList<T> queue: priorityQueue){
+            if (queue.contains(element)) {
+                return true;
             }
         }
         return false;
     }
 
     public boolean remove(T element){
-        for (int i = 0; i < prioritySize; i++){
-            for (int j = 0; j < priorityQueue[i].size(); j++){
-                if (priorityQueue[i].get(j).equals(element)){
-                    priorityQueue[i].remove(j);
-                    return true;
-                }
+        for (LinkedList<T> queue: priorityQueue){
+            if (queue.remove(element)){
+                return true;
             }
         }
         return false;
@@ -66,59 +57,16 @@ public class PriorityQueue<T> implements Iterator<T>{
 
     public int size(){
         int counter = 0;
-        for (int i = 0; i < prioritySize; i++) {
-            counter += priorityQueue[i].size();
+        for (LinkedList<T> queue: priorityQueue){
+            counter += queue.size();
         }
         return counter;
     }
-
-    @Override
-    public boolean hasNext() {
-        for (int i = 0; i < prioritySize; i++){
-            if(!priorityQueue[i].isEmpty()){
-                return true;
-            }
+    public Iterator<T> iterator(){
+        LinkedList<T> longQueue = new LinkedList<T>();
+        for (LinkedList<T> queue: priorityQueue){
+               longQueue.addAll(queue);
         }
-        return false;
-    }
-
-    @Override
-    public T next() {
-        for (int i = 0; i < prioritySize; i++){
-            for (int j = 0; j < priorityQueue[i].size(); j++){
-                if (priorityQueue[i].get(j) != null){
-                    return priorityQueue[i].get(j);
-                }
-            }
-        }
-        return null;
-    }
-    public int getPrioritySize(){
-        return this.prioritySize;
+        return longQueue.iterator();
     }
 }
-
-//    private void addToQueue(ArrayList<T> queue, T element){
-//        queue.add(element);
-//    }
-//
-//    private T pollFromQueue(ArrayList<T> queue){
-//        if(!queue.isEmpty()){
-//            return queue.get(0);
-//        }
-//        return null;
-//    }
-//
-//    private boolean containsInQueue(ArrayList<T> queue, T element){
-//        return queue.contains(element);
-//    }
-//
-//    private boolean removeFromQueue(ArrayList<T> queue, T element){
-//        for (int i = 0; i < queue.size(); i++){
-//            if (queue.get(i).equals(element)){
-//                queue.remove(i);
-//                return true;
-//            }
-//        }
-//        return false;
-//    }

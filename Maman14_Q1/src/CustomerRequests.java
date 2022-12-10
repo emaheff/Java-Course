@@ -1,11 +1,11 @@
+import java.util.Iterator;
+
 public class CustomerRequests {
-
-
-
 
     public static void main(String[] args) {
 
         PriorityQueue priorityQueue = new PriorityQueue(3);
+
 
         Customer customer1 = new Customer("Avi", "315644892", "passport renew");
         Customer customer2 = new Customer("Yosi", "3786423892", "licence renew");
@@ -16,7 +16,15 @@ public class CustomerRequests {
         Customer customer7 = new Customer("Meir", "316896812", "passport renew");
         Customer customer8 = new Customer("Shaked", "315321432", "tofes 4");
 
-        priorityQueue.add(customer1, 2);
+        assert priorityQueue.size() == 0; // check 'size' method
+        priorityQueue.add(customer1,2);
+        System.out.println("################## poll check ##################");
+        System.out.println(priorityQueue.poll()); // check 'poll' and 'add' methods
+        assert priorityQueue.size() == 1;
+        if (priorityQueue.remove(customer1)){
+            assert priorityQueue.size() == 0; // check remove method
+        }
+
         priorityQueue.add(customer2,3);
         priorityQueue.add(customer3,2);
         priorityQueue.add(customer4,1);
@@ -25,21 +33,15 @@ public class CustomerRequests {
         priorityQueue.add(customer7,2);
         priorityQueue.add(customer8,3);
 
+        priorityQueue.remove(customer2);
 
-        for (int i = 0; i < priorityQueue.getPrioritySize(); i++){
-            for (int j = 0; j < priorityQueue.getPriorityQueue()[i].size(); j++){
-                System.out.println(priorityQueue.getPriorityQueue()[i].get(j).toString());
-            }
-        }
-        if (customer1.equals(customer3)){
-            System.out.println("customer1 and customer3 are equals");
-        }
+        assert !priorityQueue.contains(customer2); // customer2 isn't in the queue, and there is no another element that equals to customer2
+        assert priorityQueue.contains(customer1); // customer1 isn't in the queue. But customer4 should be equals to customer1
 
-        System.out.println("Current highest priority customer is:\n" + priorityQueue.poll().toString());
-        priorityQueue.remove(customer4);
-        System.out.println("Current highest priority customer is:\n" + priorityQueue.poll().toString());
-        if (priorityQueue.contains(customer4)) {
-            System.out.println("someone have the same details as customer4");
+        Iterator<Customer> it = priorityQueue.iterator();
+        System.out.println("################## Iterator check ##################");
+        while (it.hasNext()){
+            System.out.println(it.next());
         }
     }
 }
