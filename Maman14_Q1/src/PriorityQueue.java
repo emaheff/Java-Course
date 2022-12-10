@@ -6,39 +6,30 @@ import java.util.LinkedList;
 public class PriorityQueue<T> {
     private static int MAX_PRIORITY_SIZE = 10;
     private int prioritySize;
-    private LinkedList<T>[] priorityQueue;
+    private LinkedList<T>[] queues;
 
     public PriorityQueue(int prioritySize) {
-        if (prioritySize < 1 ) {
-            this.prioritySize = 1;
-        }else {
-            this.prioritySize =  Math.min(prioritySize, MAX_PRIORITY_SIZE);
-        }
-        priorityQueue = new LinkedList[this.prioritySize];
-        for (int i = 0; i < this.prioritySize; i++){
-            priorityQueue[i] = new LinkedList<T>();
-        }
+        int i = Math.min(prioritySize, MAX_PRIORITY_SIZE);
+        this.prioritySize = Math.max(1, i);
+        queues = new LinkedList[this.prioritySize];
     }
     public void add(T element, int priority){
-        if (priority < 1){
-            priorityQueue[0].add(element);
-        } else{
-            int i = Math.min(priority,prioritySize);
-            priorityQueue[i-1].add(element);
-        }
+        int i = Math.min(priority,prioritySize);
+        i = Math.max(1, i);
+        queues[i-1].add(element);
     }
 
     public T poll(){
-        for (LinkedList<T> queue: priorityQueue){
+        for (LinkedList<T> queue: queues){
             if (!queue.isEmpty()) {
-                return queue.get(0);
+                return queue.poll();
             }
         }
         return null;
     }
 
     public boolean contains(T element){
-        for (LinkedList<T> queue: priorityQueue){
+        for (LinkedList<T> queue: queues){
             if (queue.contains(element)) {
                 return true;
             }
@@ -47,7 +38,7 @@ public class PriorityQueue<T> {
     }
 
     public boolean remove(T element){
-        for (LinkedList<T> queue: priorityQueue){
+        for (LinkedList<T> queue: queues){
             if (queue.remove(element)){
                 return true;
             }
@@ -57,16 +48,16 @@ public class PriorityQueue<T> {
 
     public int size(){
         int counter = 0;
-        for (LinkedList<T> queue: priorityQueue){
+        for (LinkedList<T> queue: queues){
             counter += queue.size();
         }
         return counter;
     }
     public Iterator<T> iterator(){
-        LinkedList<T> longQueue = new LinkedList<T>();
-        for (LinkedList<T> queue: priorityQueue){
-               longQueue.addAll(queue);
+        LinkedList<T> mergedQueue = new LinkedList<T>();
+        for (LinkedList<T> queue: queues){
+            mergedQueue.addAll(queue);
         }
-        return longQueue.iterator();
+        return mergedQueue.iterator();
     }
 }
