@@ -9,9 +9,12 @@ public class PriorityQueue<T> {
     private LinkedList<T>[] queues;
 
     public PriorityQueue(int prioritySize) {
-        int i = Math.min(prioritySize, MAX_PRIORITY_SIZE);
-        this.prioritySize = Math.max(1, i);
+        int n = Math.min(prioritySize, MAX_PRIORITY_SIZE);
+        this.prioritySize = Math.max(1, n);
         queues = new LinkedList[this.prioritySize];
+        for (int i = 0; i < prioritySize; i++){
+            queues[i] = new LinkedList<T>();
+        }
     }
     public void add(T element, int priority){
         int i = Math.min(priority,prioritySize);

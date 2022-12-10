@@ -8,9 +8,10 @@ public class StringCheck {
 
                 assert priorityQueue.size() == 0;
                 priorityQueue.add("apple", 3);
+                assert priorityQueue.size() == 1;
                 System.out.println("################## poll check ##################");
                 System.out.println(priorityQueue.poll()); // check 'poll' and 'add' methods
-                assert priorityQueue.size() == 1;
+                assert priorityQueue.size() == 0; // check that poll remove the element
                 if (priorityQueue.remove("apple")) {
                         assert priorityQueue.size() == 0; // check remove method
                 }
