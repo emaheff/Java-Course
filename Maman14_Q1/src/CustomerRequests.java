@@ -21,9 +21,12 @@ public class CustomerRequests {
         System.out.println("################## poll check ##################");
         System.out.println(priorityQueue.poll()); // check 'poll' and 'add' methods
         assert priorityQueue.size() == 0; // check that poll remove the element
+        priorityQueue.add(customer1,2);
+        System.out.println("################## remove check ##################");
         if (priorityQueue.remove(customer1)){
-            assert priorityQueue.size() == 0; // check remove method
+            System.out.println("customer1 removed successfully!");
         }
+        assert priorityQueue.size() == 0; // check remove method
 
         priorityQueue.add(customer2,3);
         priorityQueue.add(customer3,2);

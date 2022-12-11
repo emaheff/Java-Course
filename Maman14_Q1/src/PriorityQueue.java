@@ -5,19 +5,18 @@ import java.util.LinkedList;
 
 public class PriorityQueue<T> {
     private static int MAX_PRIORITY_SIZE = 10;
-    private int prioritySize;
     private LinkedList<T>[] queues;
 
     public PriorityQueue(int prioritySize) {
         int n = Math.min(prioritySize, MAX_PRIORITY_SIZE);
-        this.prioritySize = Math.max(1, n);
-        queues = new LinkedList[this.prioritySize];
+        n = Math.max(1, n);
+        queues = new LinkedList[n];
         for (int i = 0; i < prioritySize; i++){
             queues[i] = new LinkedList<T>();
         }
     }
     public void add(T element, int priority){
-        int i = Math.min(priority,prioritySize);
+        int i = Math.min(priority,queues.length);
         i = Math.max(1, i);
         queues[i-1].add(element);
     }

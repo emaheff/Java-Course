@@ -8,13 +8,16 @@ public class StringCheck {
 
                 assert priorityQueue.size() == 0;
                 priorityQueue.add("apple", 3);
-                assert priorityQueue.size() == 1;
+                assert priorityQueue.size() == 1; // check size method
                 System.out.println("################## poll check ##################");
                 System.out.println(priorityQueue.poll()); // check 'poll' and 'add' methods
-                assert priorityQueue.size() == 0; // check that poll remove the element
+                assert priorityQueue.size() == 0; // check that poll removes the element
+                priorityQueue.add("apple", 3);
+                System.out.println("################## remove check ##################");
                 if (priorityQueue.remove("apple")) {
-                        assert priorityQueue.size() == 0; // check remove method
+                        System.out.println("apple removed successfully!");
                 }
+                assert priorityQueue.size() == 0; // check remove method
                 priorityQueue.add("orange", 3);
                 priorityQueue.add("banana", 3);
                 priorityQueue.add("pear", 2);
