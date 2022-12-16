@@ -23,7 +23,7 @@ public class TriviaSession {
 	}
 	
 	// the method checks if the answer is correct and displays it to the user
-	public void addUserAnswer(String userInput) {
+	public void checkUserAnswer(String userInput) {
 		String correctAns = question.getA();
 		alert.getButtonTypes().clear();
 		alert.getButtonTypes().setAll(buttonTypeOK);

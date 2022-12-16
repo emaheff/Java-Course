@@ -1,24 +1,24 @@
-
 import java.util.Iterator;
 import java.util.LinkedList;
 
-
 public class PriorityQueue<T> {
-    private static int MAX_PRIORITY_SIZE = 10;
+    private static final int MAX_PRIORITY_SIZE = 10;
     private LinkedList<T>[] queues;
 
     public PriorityQueue(int prioritySize) {
-        int n = Math.min(prioritySize, MAX_PRIORITY_SIZE);
-        n = Math.max(1, n);
-        queues = new LinkedList[n];
+        int size = Math.min(prioritySize, MAX_PRIORITY_SIZE); // priority can't be smaller than 10
+        size = Math.max(1, size); // priority can't be grater than 1
+        queues = new LinkedList[size];
+        // initializing the data structure
         for (int i = 0; i < prioritySize; i++){
             queues[i] = new LinkedList<T>();
         }
     }
+
     public void add(T element, int priority){
-        int i = Math.min(priority,queues.length);
-        i = Math.max(1, i);
-        queues[i-1].add(element);
+        int actualPriority = Math.min(priority,queues.length); // priority can't be smaller than the declared lowest priority in the constructor
+        actualPriority = Math.max(1, actualPriority); // priority can't be grater than 1
+        queues[actualPriority-1].add(element);
     }
 
     public T poll(){
@@ -55,6 +55,7 @@ public class PriorityQueue<T> {
         }
         return counter;
     }
+
     public Iterator<T> iterator(){
         LinkedList<T> mergedQueue = new LinkedList<T>();
         for (LinkedList<T> queue: queues){

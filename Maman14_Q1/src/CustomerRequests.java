@@ -17,16 +17,17 @@ public class CustomerRequests {
         Customer customer8 = new Customer("Shaked", "315321432", "tofes 4");
 
         assert priorityQueue.size() == 0; // check 'size' method
+        assert priorityQueue.poll() == null;
         priorityQueue.add(customer1,2);
-        System.out.println("################## poll check ##################");
+        assert priorityQueue.size() == 1;
+        System.out.println("################## 'poll' and 'add' check ##################");
         System.out.println(priorityQueue.poll()); // check 'poll' and 'add' methods
         assert priorityQueue.size() == 0; // check that poll remove the element
         priorityQueue.add(customer1,2);
-        System.out.println("################## remove check ##################");
-        if (priorityQueue.remove(customer1)){
-            System.out.println("customer1 removed successfully!");
-        }
-        assert priorityQueue.size() == 0; // check remove method
+
+        // check remove method
+        assert priorityQueue.remove(customer1) == true;
+        assert priorityQueue.size() == 0;
 
         priorityQueue.add(customer2,3);
         priorityQueue.add(customer3,2);
@@ -35,11 +36,14 @@ public class CustomerRequests {
         priorityQueue.add(customer6,2);
         priorityQueue.add(customer7,2);
         priorityQueue.add(customer8,3);
+        assert priorityQueue.size() == 7;
 
         priorityQueue.remove(customer2);
-
         assert !priorityQueue.contains(customer2); // customer2 isn't in the queue, and there is no another element that equals to customer2
         assert priorityQueue.contains(customer1); // customer1 isn't in the queue. But customer4 should be equals to customer1
+        priorityQueue.add(customer1, 2);
+        System.out.println("################## customer1 and customer 4 ##################");
+        System.out.println(customer1 + "\n" + customer4);
 
         Iterator<Customer> it = priorityQueue.iterator();
         System.out.println("################## Iterator check ##################");

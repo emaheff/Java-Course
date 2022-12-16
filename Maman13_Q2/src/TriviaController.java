@@ -39,7 +39,7 @@ public class TriviaController {
     void okBtn(ActionEvent event) {
     	String userInput = combo.getValue();
     	combo.getItems().removeAll(combo.getItems()); // delete the comboBox option
-    	session.addUserAnswer(userInput); 
+    	session.checkUserAnswer(userInput); 
     	scoreLabel.setText("" + session.getScore()); // display the score of the game
     	if(!session.hasMoreQuestions()) { 
     		alert.getButtonTypes().clear();
