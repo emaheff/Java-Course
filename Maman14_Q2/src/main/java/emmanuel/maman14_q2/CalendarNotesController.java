@@ -27,21 +27,10 @@ public class CalendarNotesController {
     @FXML
     private GridPane grid;
     private Button btn;
+    private int day;
     private HashMap<String,String> hashMap = new HashMap<String,String>();
 
-    @FXML
-    void okBtn(ActionEvent event) {
-        int year = yearCombo.getValue();
-        int month = monthCombo.getValue();
-
-        Calendar c = Calendar.getInstance();
-        c.set(year, month - 1, 1);
-        int daysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-        displayDaysInMonth(daysInMonth, dayOfWeek);
-    }
-
-
+    // this method display the part of the UI on a window
     public void initialize() {
         showCombo();
     }
@@ -57,12 +46,83 @@ public class CalendarNotesController {
         monthCombo.setValue(1);
     }
 
+    // this method get the input (the month and the year that the user picked)
+    // analysing how many days in this month, what day in the week is the first day of the month
+    // and send those parameters to  displayDaysInMonth(daysInMonth, dayOfWeek) method
+    @FXML
+    void okBtn(ActionEvent event) {
+        int year = yearCombo.getValue();
+        int month = monthCombo.getValue();
+
+        Calendar c = Calendar.getInstance();
+        c.set(year, month - 1, 1);
+        int daysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH); // returns how many days in this month
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK); // returns what day of the week is the first day of that month
+        displayDaysInMonth(daysInMonth, dayOfWeek);
+    }
+
+    // this method responsible is to get list of buttons (as much as required (depends on the month))
+    // and then to send it to putBtnsOnGrid(btns, dayOfWeek) method to actually put the buttons on the gridPane
     private void displayDaysInMonth(int daysInMonth, int dayOfWeek) {
         grid.getChildren().clear();
         List<Button> btns = createListOfBtns(daysInMonth);
         putBtnsOnGrid(btns, dayOfWeek);
     }
 
+    // this method returns list of buttons
+    private List<Button> createListOfBtns(int daysInMonth) {
+        List<Button> btns = new ArrayList<>();
+        for (int i = 1; i <= daysInMonth; i++) {
+            btn = new Button("" + i);
+            btn.setOnAction(new EventHandler<ActionEvent>() { // make the button useful
+                // this method send to another method to handle the buttons
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    try {
+                        handelButton(actionEvent);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+            btns.add(btn);
+        }
+        return btns;
+    }
+
+    // this method get information from the pressed button and open a new UI window
+    // that suppose to show the notes (if there are any) and to allow to edit the notes
+    private void handelButton(ActionEvent actionEvent) throws IOException {
+
+        btn = (Button) actionEvent.getSource();
+        day = Integer.parseInt(btn.getText());
+
+        // need to work on it...
+        // I want to know if there is a note that i already saved on the hashMap
+        // if there are notes - it should be displayed on the texArea of the dialog window and be able to edit it
+        // else the user should be able to add a note
+        EditController ec = new EditController();
+        TextArea te = ec.getTextArea();
+        te.setText("yosi!");
+        ec.setTextArea(te);
+//        if (hashMap.containsKey(getDate())){
+//            te.setText(hashMap.get(getDate()));
+//        }
+        openDialogWindow();
+    }
+
+    // open the new dialog window
+    private void openDialogWindow() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("edit.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setTitle("Add or edit note");
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+    }
+
+    // the method puts the buttons in the right place on the gridPane
     private void putBtnsOnGrid(List<Button> btns, int dayOfWeek) {
         int column = dayOfWeek - 1, row = 0;
         while (!btns.isEmpty()) {
@@ -81,68 +141,17 @@ public class CalendarNotesController {
         }
     }
 
-    private void handelButton(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("edit.fxml"));
-
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setTitle("Add or edit note");
-        stage.setScene(scene);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.show();
-        btn = (Button) actionEvent.getSource();
-        int day = Integer.parseInt(btn.getText());
-        String date = day + "." + monthCombo.getValue() + "." + yearCombo.getValue();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Note");
-        alert.setHeaderText("Date:\t" + date);
-        if (hashMap.containsKey(date)){
-            alert.setContentText(hashMap.get(date));
-        }
-
-
-        ButtonType okBtn = new ButtonType("OK");
-        ButtonType editBtn = new ButtonType("Edit");
-        alert.getButtonTypes().setAll(okBtn, editBtn);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == editBtn){
-            TextInputDialog dialog = new TextInputDialog("Add a new note");
-            if (hashMap.containsKey(date)) {
-                dialog.getEditor().setText(hashMap.get(date));
-            }
-            dialog.getEditor().setPrefSize(500,200);
-            dialog.getEditor().setAlignment(Pos.TOP_LEFT);
-            dialog.getEditor().appendText("\n");
-            dialog.setTitle("Note");
-            dialog.setHeaderText("Add or edit your note");
-            dialog.setContentText(null);
-            Optional<String> result2 = dialog.showAndWait();
-            if (result2.isPresent()){
-                hashMap.put(date, result2.get());
-            }
-        }
+    // dont know if i need those...
+    public String getDate() {
+        String date = "" + day + "." + monthCombo.getValue() + "." + yearCombo.getValue();
+        return date;
     }
 
-    private List<Button> createListOfBtns(int daysInMonth) {
-        List<Button> btns = new ArrayList<>();
-        for (int i = 1; i <= daysInMonth; i++) {
-            btn = new Button("" + i);
-            btn.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    try {
-                        handelButton(actionEvent);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-            btns.add(btn);
-        }
-        return btns;
+    public HashMap<String, String> getHashMap() {
+        return hashMap;
     }
 
-
-
+    public void setHashMap(HashMap<String, String> hashMap) {
+        this.hashMap = hashMap;
+    }
 }

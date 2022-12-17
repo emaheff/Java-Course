@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="293.0" prefWidth="607.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="emmanuel.maman14_q2.EditController">
    <children>
       <Label text="Add or edit yor note">
@@ -15,7 +14,7 @@
          </font>
       </Label>
       <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="200.0" />
-      <Button mnemonicParsing="false" onAction="#saveBtn" text="Save">
+      <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveBtn" text="Save">
          <font>
             <Font size="24.0" />
          </font>
