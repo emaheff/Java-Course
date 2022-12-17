@@ -7,10 +7,10 @@ import java.util.Scanner;
 public class FileReader {
 	
 	// the method get the lines from the file and contain the lines in a list
-		public  List<String> getAllLines() {
+		public List<String> getAllLines() {
 			List<String> lines = new ArrayList<>();
 			try {
-				File file = new File("TriviaQuestionsJavaTester.txt"); // if you want a tester use - "TriviaQuestionsJavaTester.txt"
+				File file = new File("TriviaQuestionsJava.txt"); // if you want a tester use - "TriviaQuestionsJavaTester.txt"
 				Scanner scan = new Scanner(file); 
 				while(scan.hasNext()) {
 					String line = scan.nextLine();
