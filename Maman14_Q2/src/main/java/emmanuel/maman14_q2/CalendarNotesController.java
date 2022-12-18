@@ -5,10 +5,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.*;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -17,7 +21,8 @@ import java.util.*;
 
 public class CalendarNotesController {
     private static final int START_YEAR = 2022, END_YEAR = 2030, DAYS_IN_WEEK = 7;
-
+    private EventRepository repository = new EventRepository();
+    private EditController editController = new EditController();
     @FXML
     private ComboBox<Integer> monthCombo;
 
@@ -26,9 +31,7 @@ public class CalendarNotesController {
 
     @FXML
     private GridPane grid;
-    private Button btn;
-    private int day;
-    private HashMap<String,String> hashMap = new HashMap<String,String>();
+
 
     // this method display the part of the UI on a window
     public void initialize() {
@@ -54,32 +57,38 @@ public class CalendarNotesController {
         int year = yearCombo.getValue();
         int month = monthCombo.getValue();
 
-        Calendar c = Calendar.getInstance();
-        c.set(year, month - 1, 1);
-        int daysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH); // returns how many days in this month
-        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK); // returns what day of the week is the first day of that month
-        displayDaysInMonth(daysInMonth, dayOfWeek);
+        Calendar date = Calendar.getInstance();
+        date.set(year, month - 1, 1);
+
+        displayDaysInMonth(date);
     }
 
     // this method responsible is to get list of buttons (as much as required (depends on the month))
     // and then to send it to putBtnsOnGrid(btns, dayOfWeek) method to actually put the buttons on the gridPane
-    private void displayDaysInMonth(int daysInMonth, int dayOfWeek) {
+    private void displayDaysInMonth(Calendar date) {
         grid.getChildren().clear();
-        List<Button> btns = createListOfBtns(daysInMonth);
+        int dayOfWeek = date.get(Calendar.DAY_OF_WEEK); // returns what day of the week is the first day of that month
+        List<Button> btns = createListOfBtns(date);
         putBtnsOnGrid(btns, dayOfWeek);
     }
 
     // this method returns list of buttons
-    private List<Button> createListOfBtns(int daysInMonth) {
+    private List<Button> createListOfBtns(Calendar date) {
+        int year = date.get(Calendar.YEAR);
+        int month = date.get(Calendar.MONTH) -1;
+        int daysInMonth = date.getActualMaximum(Calendar.DAY_OF_MONTH); // returns how many days in this month
+        int dayOfWeek = date.get(Calendar.DAY_OF_WEEK); // returns what day of the week is the first day of that month
         List<Button> btns = new ArrayList<>();
         for (int i = 1; i <= daysInMonth; i++) {
-            btn = new Button("" + i);
+            Calendar dayInMonth = Calendar.getInstance();
+            dayInMonth.set(year, month, i);
+            Button btn = new Button("" + i);
             btn.setOnAction(new EventHandler<ActionEvent>() { // make the button useful
                 // this method send to another method to handle the buttons
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     try {
-                        handelButton(actionEvent);
+                        handelButton(actionEvent,dayInMonth);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -92,29 +101,25 @@ public class CalendarNotesController {
 
     // this method get information from the pressed button and open a new UI window
     // that suppose to show the notes (if there are any) and to allow to edit the notes
-    private void handelButton(ActionEvent actionEvent) throws IOException {
-
-        btn = (Button) actionEvent.getSource();
-        day = Integer.parseInt(btn.getText());
-
-        // need to work on it...
-        // I want to know if there is a note that i already saved on the hashMap
-        // if there are notes - it should be displayed on the texArea of the dialog window and be able to edit it
-        // else the user should be able to add a note
-        EditController ec = new EditController();
-        TextArea te = ec.getTextArea();
-        te.setText("yosi!");
-        ec.setTextArea(te);
-//        if (hashMap.containsKey(getDate())){
-//            te.setText(hashMap.get(getDate()));
-//        }
-        openDialogWindow();
+    private void handelButton(ActionEvent actionEvent, Calendar dayInMonth) throws IOException {
+        String event = repository.getEvent(dayInMonth);
+        TextArea textArea = editController.getTextArea();
+        textArea.setText(event);
+        openDialogWindow(dayInMonth);
     }
 
     // open the new dialog window
-    private void openDialogWindow() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("edit.fxml"));
+    private void openDialogWindow(Calendar date) throws IOException {
+        VBox root = (VBox) FXMLLoader.load(getClass().getResource("edit.fxml"));
+        root.getChildren().remove(1);
+        TextArea textArea = editController.getTextArea();
+        textArea.setText("uriel");
+        root.getChildren().add(textArea);
+        Node temp = root.getChildren().remove(1);
+        root.getChildren().add(temp);
         Scene scene = new Scene(root);
+
+        scene.setUserData(date);
         Stage stage = new Stage();
         stage.setTitle("Add or edit note");
         stage.setScene(scene);
@@ -142,16 +147,13 @@ public class CalendarNotesController {
     }
 
     // dont know if i need those...
-    public String getDate() {
-        String date = "" + day + "." + monthCombo.getValue() + "." + yearCombo.getValue();
-        return date;
-    }
 
-    public HashMap<String, String> getHashMap() {
-        return hashMap;
-    }
 
-    public void setHashMap(HashMap<String, String> hashMap) {
-        this.hashMap = hashMap;
-    }
+//    public HashMap<String, String> getEvents() {
+//        return events;
+//    }
+//
+//    public void setEvents(HashMap<String, String> events) {
+//        this.events = events;
+//    }
 }

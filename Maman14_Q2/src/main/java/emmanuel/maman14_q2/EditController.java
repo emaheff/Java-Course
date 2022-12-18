@@ -6,8 +6,14 @@ import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 
 public class EditController {
+
+    private Calendar date;
+    private EventRepository repository;
 
     @FXML
     private TextArea textArea = new TextArea();
@@ -16,16 +22,16 @@ public class EditController {
 
     private CalendarNotesController controller;
 
+
     // this method should save the string to the hashMap and close the dialog window
     @FXML
     void saveBtn(ActionEvent event) {
-        // close the window
-        Stage stage = (Stage)saveBtn.getScene().getWindow();
-        stage.close();
-    }
+        Button btn = (Button) event.getSource();
+        System.out.println(textArea.getText());
 
-    public void setTextArea(TextArea textArea) {
-        this.textArea = textArea;
+        // close the window
+//        Stage stage = (Stage)saveBtn.getScene().getWindow();
+//        stage.close();
     }
 
     public TextArea getTextArea() {
