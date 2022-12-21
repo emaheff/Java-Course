@@ -1,15 +1,27 @@
 package emmanuel.maman14_q2;
 
-import java.util.Calendar;
+import java.util.*;
 
 public class EventRepository {
 
-    String getEvent(Calendar date){
-        return "yosi";
+    private Map<Calendar, Event> events = new HashMap<>();
+
+    Event getEvent(Calendar date) {
+        return events.get(date);
     }
 
-    void setEvent(Calendar date, String event){
-
+    void saveEvent(Event event) {
+        Calendar date = event.getDate();
+        events.put(date, event);
     }
 
+    public List<Event> findByTitle(String title) {
+        List<Event> events = new ArrayList<>();
+        for (Map.Entry<Calendar, Event> entry : this.events.entrySet()) {
+            if (entry.getValue().getTitle().equals(title)) {
+                events.add(entry.getValue());
+            }
+        }
+        return events;
+    }
 }
