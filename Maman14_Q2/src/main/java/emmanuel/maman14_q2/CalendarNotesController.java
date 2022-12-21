@@ -21,26 +21,22 @@ public class CalendarNotesController {
     private EventRepository repository;
     @FXML
     private ComboBox<Integer> monthCombo;
-
     @FXML
     private ComboBox<Integer> yearCombo;
-
     @FXML
     private GridPane grid;
+    @FXML
+    private TextField searchText;
+
 
     // global hashMap that saving the created buttons
-    private HashMap<String, Button[]> earlierButtons = new HashMap<String, Button[]>();
+    private HashMap<String, Button[]> earlierButtons = new HashMap<>();
 
     public CalendarNotesController() {
         this.repository = new EventRepository();
     }
 
-    // this method display the part of the UI on a window
     public void initialize() {
-        displayCombos();
-    }
-
-    private void displayCombos() {
         for (int i = START_YEAR; i <= END_YEAR; i++) {
             yearCombo.getItems().add(i);
         }
@@ -57,12 +53,12 @@ public class CalendarNotesController {
     @FXML
     void okBtn() {
         int year = yearCombo.getValue();
-        int month = monthCombo.getValue();
+        int month = monthCombo.getValue() - 1;
 
         String monthAndYear = "" + month + "." + year;
 
         Calendar date = Calendar.getInstance();
-        date.set(year, month - 1, 1);
+        date.set(year, month, 1);
 
         displayDaysInMonth(date, monthAndYear);
     }
@@ -84,13 +80,13 @@ public class CalendarNotesController {
     // this method returns list of buttons
     private Button[] createArrayOfBtns(Calendar date) {
         int year = date.get(Calendar.YEAR);
-        int month = date.get(Calendar.MONTH) - 1;
+        int month = date.get(Calendar.MONTH);
         int daysInMonth = date.getActualMaximum(Calendar.DAY_OF_MONTH); // returns how many days in this month
         Button[] btns = new Button[daysInMonth];
         Font font = new Font(20);
         for (int i = 0; i < daysInMonth; i++) {
             Calendar dayInMonth = Calendar.getInstance();
-            dayInMonth.set(year, month, i+1);
+            dayInMonth.set(year, month, i + 1);
             Button btn = new Button("" + (i + 1));
             btn.setFont(font);
             btn.setOnAction(new EventHandler<ActionEvent>() { // make the button useful
@@ -107,37 +103,30 @@ public class CalendarNotesController {
 
     // this method get information from the pressed button and open a new UI window
     // that suppose to show the notes (if there are any) and to allow to edit the notes
-    private void handelSelectedDayBtn(Calendar dayInMonth){
-
-//        String event = repository.getEvent(dayInMonth);
-//        TextArea textArea = editController.getTextArea();
-//        textArea.setText(event);
-
+    private void handelSelectedDayBtn(Calendar date) {
         TextArea textArea = new TextArea();
-        Event event = repository.getEvent(dayInMonth);
-        if (event != null){
-            textArea.setText(repository.getEvent(dayInMonth).getTitle());
+        Event event = repository.getEvent(date);
+        if (event != null) {
+            textArea.setText(event.getTitle());
         }
-        openDialogWindow(dayInMonth, textArea);
-    }
-
-    // open the new dialog window
-    private void openDialogWindow(Calendar date, TextArea textArea) {
-        Font font = new Font(20);
-        Label editLabel = new Label("Add or edit your note");
-        editLabel.setFont(font);
-//        textArea.setWrapText(true);
         Button saveBtn = new Button("Save");
-        saveBtn.setFont(font);
         saveBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 saveBtnPressed(actionEvent, textArea, date);
             }
         });
+        openEventWindow(textArea, saveBtn);
+    }
+
+    // open the new dialog window
+    private void openEventWindow(TextArea textArea, Button saveBtn) {
+        Font font = new Font(20);
+        Label editLabel = new Label("Add or edit your note");
+        editLabel.setFont(font);
+        saveBtn.setFont(font);
         VBox vBox = new VBox(10, editLabel, textArea, saveBtn);
         vBox.setAlignment(Pos.CENTER);
-
         Scene scene = new Scene(vBox);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -145,13 +134,17 @@ public class CalendarNotesController {
         stage.show();
     }
 
-    void saveBtnPressed(ActionEvent event, TextArea textArea, Calendar date) {
+    void saveBtnPressed(ActionEvent actionEvent, TextArea textArea, Calendar date) {
         String userInput = textArea.getText();
-        Event event1 = new Event(date,userInput);
-        repository.saveEvent(event1);
+        if (!userInput.equals("")){
+            Event event = new Event(date, userInput);
+            repository.saveEvent(event);
+        }
+        closeWindow(actionEvent);
+    }
 
-        // close the edit window
-        Button btn = (Button) event.getSource();
+    private void closeWindow(ActionEvent actionEvent){
+        Button btn = (Button) actionEvent.getSource();
         Stage stage = (Stage) btn.getScene().getWindow();
         stage.close();
     }
@@ -171,11 +164,58 @@ public class CalendarNotesController {
         }
     }
 
-    private void setBtnsSize(Button btn, int column, int row){
+    private void setBtnsSize(Button btn, int column, int row) {
         GridPane.setHalignment(btn, HPos.CENTER);
         GridPane.setValignment(btn, VPos.CENTER);
         Bounds bounds = grid.getCellBounds(column, row);
         btn.setPrefWidth(bounds.getWidth());
         btn.setPrefHeight(bounds.getHeight());
+    }
+
+    @FXML
+    void searchBtnPressed() {
+        String userInput = searchText.getText();
+        List<Event> titles = repository.findByTitle(userInput);
+        Collections.sort(titles);
+        Label foundedTitleLabel = new Label();
+        if (titles.isEmpty() || userInput.equals("")) {
+            foundedTitleLabel.setText("No result for this title");
+        } else {
+            String allFoundedTitles = "results that contains the search - " + userInput + ":\n";
+            for (Event e: titles) {
+                allFoundedTitles += "\n" +  "Date:\t" + e.getDate().getTime() + "\n" +"The content:\n" + e.getTitle() + "\n";
+            }
+            foundedTitleLabel.setText(allFoundedTitles);
+        }
+        Button okBtn = new Button("OK");
+        okBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                closeWindow(actionEvent);
+            }
+        });
+        openSearchWindow(foundedTitleLabel, okBtn);
+    }
+
+    private void openSearchWindow(Label allTitles, Button okBtn){
+        Font font = new Font(20);
+        Label result = new Label("result");
+        result.setFont(font);
+        okBtn.setFont(font);
+        VBox vBox = new VBox(10, result, allTitles, okBtn);
+        vBox.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(vBox);
+        System.out.println(scene.heightProperty());
+        Stage stage = new Stage();
+        stage.setWidth(500);
+        stage.setHeight(700);
+        vBox.setPrefWidth(stage.getWidth());
+        vBox.setPrefHeight(stage.getHeight());
+        allTitles.setPrefWidth(vBox.getPrefWidth());
+        allTitles.setPrefHeight(vBox.getPrefHeight() - result.getHeight() - okBtn.getPrefHeight());
+        allTitles.setAlignment(Pos.TOP_LEFT);
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
     }
 }

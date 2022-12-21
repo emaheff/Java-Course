@@ -18,7 +18,7 @@ public class EventRepository {
     public List<Event> findByTitle(String title) {
         List<Event> events = new ArrayList<>();
         for (Map.Entry<Calendar, Event> entry : this.events.entrySet()) {
-            if (entry.getValue().getTitle().equals(title)) {
+            if (entry.getValue().getTitle().contains(title)) {
                 events.add(entry.getValue());
             }
         }
