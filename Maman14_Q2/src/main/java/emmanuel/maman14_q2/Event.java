@@ -1,13 +1,11 @@
 package emmanuel.maman14_q2;
 
 import java.util.Calendar;
-import java.util.Objects;
 
 public class Event implements Comparable<Event>{
 
     private Calendar date;
     private String title;
-
 
     public Event(Calendar date, String title) {
         this.date = date;
@@ -22,6 +20,7 @@ public class Event implements Comparable<Event>{
         return title;
     }
 
+    // this method created to enable sort method to sort events by dates
     @Override
     public int compareTo(Event e) {
         return this.getDate().compareTo(e.getDate());

@@ -17,7 +17,7 @@ import javafx.scene.control.TextArea;
 import java.util.*;
 
 public class CalendarNotesController {
-    private static final int START_YEAR = 2022, END_YEAR = 2030;
+    private static final int START_YEAR = 2022, END_YEAR = 2030, DAYS_IN_A_WEEK = 7;
     private EventRepository repository;
     @FXML
     private ComboBox<Integer> monthCombo;
@@ -36,6 +36,7 @@ public class CalendarNotesController {
         this.repository = new EventRepository();
     }
 
+    // display the combo boxes of years and months
     public void initialize() {
         for (int i = START_YEAR; i <= END_YEAR; i++) {
             yearCombo.getItems().add(i);
@@ -47,9 +48,8 @@ public class CalendarNotesController {
         monthCombo.setValue(1);
     }
 
-    // this method get the input (the month and the year that the user picked)
-    // analysing how many days in this month, what day in the week is the first day of the month
-    // and send those parameters to  displayDaysInMonth(daysInMonth, dayOfWeek) method
+    // this method get the input (the month and year the user picked)
+    // and call to displayDaysInMonth method
     @FXML
     void okBtn() {
         int year = yearCombo.getValue();
@@ -63,12 +63,14 @@ public class CalendarNotesController {
         displayDaysInMonth(date, monthAndYear);
     }
 
-    // this method responsible is to get array of buttons (as much as required (depends on the month))
+    // this method responsible is to get an array of buttons (as much as required (depends on the month))
+    // from createArrayOfBtns and save them in earlierButtons hashMap or to get an array of buttons from
+    // the same hashMap.
     // and then to send it to putBtnsOnGrid method to actually put the buttons on the gridPane
     private void displayDaysInMonth(Calendar date, String monthAndYear) {
         grid.getChildren().clear(); // clear the grid in case there are previous buttons
         Button[] btns;
-        if (earlierButtons.containsKey(monthAndYear)) { // if true - that means that those buttons already initialized and contain important data
+        if (earlierButtons.containsKey(monthAndYear)) { // if true - that means that those buttons already initialized
             btns = earlierButtons.get(monthAndYear);
         } else {
             btns = createArrayOfBtns(date); // initialise new array of buttons and store them in the earlierButtons hashMap
@@ -89,8 +91,7 @@ public class CalendarNotesController {
             dayInMonth.set(year, month, i + 1);
             Button btn = new Button("" + (i + 1));
             btn.setFont(font);
-            btn.setOnAction(new EventHandler<ActionEvent>() { // make the button useful
-                // this method send to another method to handle the buttons
+            btn.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     handelSelectedDayBtn(dayInMonth);
@@ -119,7 +120,7 @@ public class CalendarNotesController {
         openEventWindow(textArea, saveBtn);
     }
 
-    // open the new dialog window
+    // open the new event window
     private void openEventWindow(TextArea textArea, Button saveBtn) {
         Font font = new Font(20);
         Label editLabel = new Label("Add or edit your note");
@@ -134,6 +135,7 @@ public class CalendarNotesController {
         stage.show();
     }
 
+    // this method save the content of the user input (new events or edited event)
     void saveBtnPressed(ActionEvent actionEvent, TextArea textArea, Calendar date) {
         String userInput = textArea.getText();
         if (!userInput.equals("")){
@@ -154,7 +156,7 @@ public class CalendarNotesController {
         int dayOfWeek = date.get(Calendar.DAY_OF_WEEK); // returns what day of the week is the first day of that month
         int column = dayOfWeek - 1, row = 0;
         for (Button btn : btns) {
-            if (column == 7) {
+            if (column == DAYS_IN_A_WEEK) {
                 column = 0;
                 row++;
             }
@@ -164,6 +166,7 @@ public class CalendarNotesController {
         }
     }
 
+    // this method is responsible for displaying the right size of buttons on the grid
     private void setBtnsSize(Button btn, int column, int row) {
         GridPane.setHalignment(btn, HPos.CENTER);
         GridPane.setValignment(btn, VPos.CENTER);
@@ -172,40 +175,39 @@ public class CalendarNotesController {
         btn.setPrefHeight(bounds.getHeight());
     }
 
+    // this method takes the user input and search the content in the hashMap that contain all the events
     @FXML
     void searchBtnPressed() {
         String userInput = searchText.getText();
         List<Event> titles = repository.findByTitle(userInput);
-        Collections.sort(titles);
         Label foundedTitleLabel = new Label();
         if (titles.isEmpty() || userInput.equals("")) {
-            foundedTitleLabel.setText("No result for this title");
+            foundedTitleLabel.setText("No results for this title");
         } else {
-            String allFoundedTitles = "results that contains the search - " + userInput + ":\n";
+            String allFoundedTitles = "results that contains the search - \t" + userInput + "\n";
             for (Event e: titles) {
-                allFoundedTitles += "\n" +  "Date:\t" + e.getDate().getTime() + "\n" +"The content:\n" + e.getTitle() + "\n";
+                allFoundedTitles += "\n" +  "Date: " + e.getDate().getTime() + "\n" + e.getTitle() + "\n";
             }
             foundedTitleLabel.setText(allFoundedTitles);
         }
-        Button okBtn = new Button("OK");
+        Button okBtn = new Button("Close");
         okBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 closeWindow(actionEvent);
             }
         });
-        openSearchWindow(foundedTitleLabel, okBtn);
+        openResultsWindow(foundedTitleLabel, okBtn);
     }
 
-    private void openSearchWindow(Label allTitles, Button okBtn){
+    private void openResultsWindow(Label allTitles, Button okBtn){
         Font font = new Font(20);
-        Label result = new Label("result");
+        Label result = new Label("Results");
         result.setFont(font);
         okBtn.setFont(font);
         VBox vBox = new VBox(10, result, allTitles, okBtn);
         vBox.setAlignment(Pos.CENTER);
         Scene scene = new Scene(vBox);
-        System.out.println(scene.heightProperty());
         Stage stage = new Stage();
         stage.setWidth(500);
         stage.setHeight(700);
