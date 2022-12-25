@@ -20,7 +20,6 @@ public class Event implements Comparable<Event>{
         return title;
     }
 
-    // this method created to enable sort method to sort events by dates
     @Override
     public int compareTo(Event e) {
         return this.getDate().compareTo(e.getDate());

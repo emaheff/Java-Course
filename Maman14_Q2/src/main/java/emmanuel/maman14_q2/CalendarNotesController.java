@@ -30,7 +30,7 @@ public class CalendarNotesController {
 
 
     // global hashMap that saving the created buttons
-    private HashMap<String, Button[]> earlierButtons = new HashMap<>();
+    private Map<String, Button[]> earlierButtons = new HashMap<>();
 
     public CalendarNotesController() {
         this.repository = new EventRepository();
@@ -55,31 +55,27 @@ public class CalendarNotesController {
         int year = yearCombo.getValue();
         int month = monthCombo.getValue() - 1;
 
-        String monthAndYear = "" + month + "." + year;
+        String keyBtns = "" + month + "." + year;
 
         Calendar date = Calendar.getInstance();
         date.set(year, month, 1);
 
-        displayDaysInMonth(date, monthAndYear);
+        displayDaysInMonth(date, keyBtns);
     }
 
     // this method responsible is to get an array of buttons (as much as required (depends on the month))
     // from createArrayOfBtns and save them in earlierButtons hashMap or to get an array of buttons from
     // the same hashMap.
     // and then to send it to putBtnsOnGrid method to actually put the buttons on the gridPane
-    private void displayDaysInMonth(Calendar date, String monthAndYear) {
+    private void displayDaysInMonth(Calendar date, String keyBtns) {
         grid.getChildren().clear(); // clear the grid in case there are previous buttons
         Button[] btns;
-        if (earlierButtons.containsKey(monthAndYear)) { // if true - that means that those buttons already initialized
-            btns = earlierButtons.get(monthAndYear);
-        } else {
-            btns = createArrayOfBtns(date); // initialise new array of buttons and store them in the earlierButtons hashMap
-            earlierButtons.put(monthAndYear, btns);
-        }
+        earlierButtons.computeIfAbsent(keyBtns, key -> createArrayOfBtns(date));
+        btns = earlierButtons.get(keyBtns);
         putBtnsOnGrid(btns, date);
     }
 
-    // this method returns list of buttons
+    // this method returns array of buttons
     private Button[] createArrayOfBtns(Calendar date) {
         int year = date.get(Calendar.YEAR);
         int month = date.get(Calendar.MONTH);
@@ -138,7 +134,7 @@ public class CalendarNotesController {
     // this method save the content of the user input (new events or edited event)
     void saveBtnPressed(ActionEvent actionEvent, TextArea textArea, Calendar date) {
         String userInput = textArea.getText();
-        if (!userInput.equals("")){
+        if (!(userInput == null || userInput.isEmpty() || userInput.trim().isEmpty())){
             Event event = new Event(date, userInput);
             repository.saveEvent(event);
         }
@@ -179,33 +175,41 @@ public class CalendarNotesController {
     @FXML
     void searchBtnPressed() {
         String userInput = searchText.getText();
-        List<Event> titles = repository.findByTitle(userInput);
-        Label foundedTitleLabel = new Label();
-        if (titles.isEmpty() || userInput.equals("")) {
-            foundedTitleLabel.setText("No results for this title");
-        } else {
-            String allFoundedTitles = "results that contains the search - \t" + userInput + "\n";
-            for (Event e: titles) {
-                allFoundedTitles += "\n" +  "Date: " + e.getDate().getTime() + "\n" + e.getTitle() + "\n";
-            }
-            foundedTitleLabel.setText(allFoundedTitles);
-        }
-        Button okBtn = new Button("Close");
-        okBtn.setOnAction(new EventHandler<ActionEvent>() {
+        String results = getSearchResults(userInput);
+        Label foundedEventsLabel = new Label(results);
+        Button closeBtn = new Button("Close");
+        closeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 closeWindow(actionEvent);
             }
         });
-        openResultsWindow(foundedTitleLabel, okBtn);
+        openResultsWindow(foundedEventsLabel, closeBtn);
     }
 
-    private void openResultsWindow(Label allTitles, Button okBtn){
+    // this method returns a string of all events that contains the userInput
+    private String getSearchResults(String userInput){
+        List<Event> eventList = repository.findByTitle(userInput);
+        Collections.sort(eventList);
+        if (eventList.isEmpty() || userInput.equals("")) {
+            return "No events matched your search";
+        } else {
+            String allFoundedEvents = String.format("results that contains the search - \t%s\n", userInput);
+            for (Event e: eventList) {
+                Date date = e.getDate().getTime();
+                String title = e.getTitle();
+                allFoundedEvents += String.format("\nDate: %1$s\n%2$s\n", date, title);
+            }
+            return allFoundedEvents;
+        }
+    }
+
+    private void openResultsWindow(Label foundedEventsLabel, Button closeBtn){
         Font font = new Font(20);
         Label result = new Label("Results");
         result.setFont(font);
-        okBtn.setFont(font);
-        VBox vBox = new VBox(10, result, allTitles, okBtn);
+        closeBtn.setFont(font);
+        VBox vBox = new VBox(10, result, foundedEventsLabel, closeBtn);
         vBox.setAlignment(Pos.CENTER);
         Scene scene = new Scene(vBox);
         Stage stage = new Stage();
@@ -213,9 +217,9 @@ public class CalendarNotesController {
         stage.setHeight(700);
         vBox.setPrefWidth(stage.getWidth());
         vBox.setPrefHeight(stage.getHeight());
-        allTitles.setPrefWidth(vBox.getPrefWidth());
-        allTitles.setPrefHeight(vBox.getPrefHeight() - result.getHeight() - okBtn.getPrefHeight());
-        allTitles.setAlignment(Pos.TOP_LEFT);
+        foundedEventsLabel.setPrefWidth(vBox.getPrefWidth());
+        foundedEventsLabel.setPrefHeight(vBox.getPrefHeight() - result.getHeight() - closeBtn.getPrefHeight());
+        foundedEventsLabel.setAlignment(Pos.TOP_LEFT);
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();

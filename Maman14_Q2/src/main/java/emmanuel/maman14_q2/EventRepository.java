@@ -17,7 +17,7 @@ public class EventRepository {
         events.put(date, event);
     }
 
-    // this method finds all the events that contain the given title and returns sorted (by date) list of events
+    // this method finds all the events that contain the given title and returns list of events
     public List<Event> findByTitle(String title) {
         List<Event> events = new ArrayList<>();
         for (Map.Entry<Calendar, Event> entry : this.events.entrySet()) {
@@ -25,7 +25,6 @@ public class EventRepository {
                 events.add(entry.getValue());
             }
         }
-        Collections.sort(events);
         return events;
     }
 }
