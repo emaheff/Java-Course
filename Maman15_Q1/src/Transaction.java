@@ -2,9 +2,9 @@
 public class Transaction {
 
     private String accountNumber;
-    private double deposit;
+    private int deposit;
 
-    public Transaction(String accountNumber, double deposit){
+    public Transaction(String accountNumber, int deposit){
         this.accountNumber = accountNumber;
         this.deposit = deposit;
     }
@@ -13,7 +13,7 @@ public class Transaction {
         return accountNumber;
     }
 
-    public double getDeposit() {
+    public int getDeposit() {
         return deposit;
     }
 }
