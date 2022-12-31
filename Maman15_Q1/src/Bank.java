@@ -3,8 +3,9 @@ import java.util.LinkedList;
 
 public class Bank {
     private static final int NUM_OF_ACCOUNTS = 5;
-    private static final int NUM_OF_TRANSACTIONS = 50;
+    private static final int NUM_OF_TRANSACTIONS = 20;
     private static final int NUM_OF_TELLERS = 10;
+    private static final int MAX_DEPOSIT = 1000;
     private static ArrayList<BankAccount> accounts = createAccounts();
     private static Transactions transactions = createTransactions();
 
@@ -12,7 +13,7 @@ public class Bank {
         LinkedList<Transaction> transactionsList = new LinkedList<>();
         Transactions transactions = new Transactions(transactionsList);
         for (int i = 0; i < NUM_OF_TRANSACTIONS; i++){
-            Transaction transaction = new Transaction("" + (int)(Math.random()*5), (int)(Math.random()*2000) - 1000);
+            Transaction transaction = new Transaction("" + (int)(Math.random()*NUM_OF_ACCOUNTS), (int)(Math.random()*(2 * MAX_DEPOSIT)) - MAX_DEPOSIT);
             transactions.addTransaction(transaction);
         }
         return transactions;
@@ -29,7 +30,7 @@ public class Bank {
     private static Teller[] createTellers(){
         Teller[] tellers = new Teller[NUM_OF_TELLERS];
         for (int i = 0; i < NUM_OF_TELLERS; i++){
-            tellers[i] = new Teller(accounts, transactions, "" + i);
+            tellers[i] = new Teller(accounts, transactions);
         }
         return tellers;
     }
@@ -54,7 +55,7 @@ public class Bank {
             teller.start();
         }
         while (!isFinish(tellers)){
-
+            // just wait
         }
         printAccounts();
     }

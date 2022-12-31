@@ -10,24 +10,26 @@ public class BankAccount {
         this.balance = balance;
     }
 
-    public synchronized void transaction(int deposit, String accountNumber){
+    public synchronized void transaction(Transaction transaction){
+        int deposit = transaction.getDeposit();
+        String accountNumber = transaction.getAccountNumber();
         while ((getBalance() + deposit) < 0){
             try {
-                System.out.println("\nAccount: " + accountNumber + "\nBalance: " + balance + "\nDeposit: " + deposit
-                + "\ncan't do this transaction, this account have no money");
+                System.out.println("\nAccount: " + accountNumber + "\nBalance: " + getBalance() + "\nDeposit: " + deposit
+                + "\ncan't do this transaction, this account haven't enough money");
                 wait();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
-        int temp = getBalance();
-        temp += deposit;
+        int temp = getBalance() + deposit;
         try {
-            Thread.sleep((int)(Math.random() * 100));
+            Thread.sleep((int)(Math.random() * 101));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("\nAccount: " + accountNumber + "\nBalance: " + balance + "\nDeposit: " + deposit + "\nafter deposit balance = " + (balance += deposit));
+        System.out.println("\nAccount: " + accountNumber + "\nBalance: " + getBalance() + "\nDeposit: " + deposit
+                + "\nafter deposit balance = " + temp);
         this.balance = temp;
         notifyAll();
     }
