@@ -16,8 +16,7 @@ public class Teller extends Thread {
         while (!transactions.isTransactionsEmpty()) {
             Transaction transaction = transactions.getTransaction();
             if (transaction != null){
-                String accountNumber = transaction.getAccountNumber();
-                BankAccount account = getAccount(accountNumber);
+                BankAccount account = getAccount(transaction);
                 if (account != null){
                     account.transaction(transaction);
                 }
@@ -25,7 +24,8 @@ public class Teller extends Thread {
         }
     }
 
-    private BankAccount getAccount(String accountNumber) {
+    private BankAccount getAccount(Transaction transaction) {
+        String accountNumber = transaction.getAccountNumber();
         for (BankAccount current : accounts) {
             if (current.getAccountNumber().equals(accountNumber)) {
                 return current;

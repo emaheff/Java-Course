@@ -23,15 +23,15 @@ public class BankAccount {
             }
         }
         int temp = getBalance() + deposit;
+        System.out.println("\nAccount: " + accountNumber + "\nBalance: " + getBalance() + "\nDeposit: " + deposit
+                + "\nafter deposit balance = " + temp);
+        this.balance = temp;
+        notifyAll();
         try {
             Thread.sleep((int)(Math.random() * 101));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("\nAccount: " + accountNumber + "\nBalance: " + getBalance() + "\nDeposit: " + deposit
-                + "\nafter deposit balance = " + temp);
-        this.balance = temp;
-        notifyAll();
     }
 
     public int getBalance(){

@@ -9,6 +9,15 @@ public class Bank {
     private static ArrayList<BankAccount> accounts = createAccounts();
     private static Transactions transactions = createTransactions();
 
+    private static ArrayList<BankAccount> createAccounts(){
+        ArrayList<BankAccount> accounts = new ArrayList<>();
+        for (int i = 0; i < NUM_OF_ACCOUNTS; i++){
+            BankAccount account = new BankAccount("" + i, 0);
+            accounts.add(account);
+        }
+        return accounts;
+    }
+
     private static Transactions createTransactions(){
         LinkedList<Transaction> transactionsList = new LinkedList<>();
         Transactions transactions = new Transactions(transactionsList);
@@ -19,14 +28,6 @@ public class Bank {
         return transactions;
     }
 
-    private static ArrayList<BankAccount> createAccounts(){
-        ArrayList<BankAccount> accounts = new ArrayList<>();
-        for (int i = 0; i < NUM_OF_ACCOUNTS; i++){
-            BankAccount account = new BankAccount("" + i, 0);
-            accounts.add(account);
-        }
-        return accounts;
-    }
     private static Teller[] createTellers(){
         Teller[] tellers = new Teller[NUM_OF_TELLERS];
         for (int i = 0; i < NUM_OF_TELLERS; i++){
@@ -34,11 +35,13 @@ public class Bank {
         }
         return tellers;
     }
+
     private static void printAccounts(){
         for (BankAccount account : accounts) {
             System.out.println(account);
         }
     }
+
     private static boolean isFinish(Teller[] tellers){
         for (Teller teller : tellers) {
             if (teller.isAlive()) {
