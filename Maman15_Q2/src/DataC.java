@@ -1,7 +1,6 @@
 public class DataC {
-    private int x = 0;
-    private int y = 0;
-    private boolean isReading, isWriting;
+    private int x = 0, y = 0;
+    private int readers = 0, writers = 0;
 
     public DataC(int x, int y) {
         this.x = x;
@@ -9,30 +8,37 @@ public class DataC {
     }
 
     public synchronized int getDiff() {
-        while (isWriting){
+        while (writers > 0){
             try {
                 wait();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
-        isReading = false;
-        notifyAll();
+        readers++;
         return (Math.abs(x - y));
     }
 
+    public synchronized void unlockDiff(){
+        readers--;
+        notifyAll();
+    }
+
     public synchronized void update(int dx, int dy) {
-        isWriting = true;
-        while (isReading){
+        while (readers > 0 || writers > 0){
             try {
                 wait();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
+        writers++;
         x += dx;
         y += dy;
-        isWriting = false;
+    }
+
+    public synchronized void unlockUpdate(){
+        writers--;
         notifyAll();
     }
 }
