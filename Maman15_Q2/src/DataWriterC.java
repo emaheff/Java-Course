@@ -15,7 +15,6 @@ public class DataWriterC extends Thread  {
             int dy = (int)(Math.random() * RANGE);
             dataC.update(dx, dy);
             System.out.println("Writer" + (i+1) + ") dx = " + dx + " ,dy = " + dy);
-            dataC.unlockUpdate();
             try {
                 sleep(TIME);
             } catch (InterruptedException e) {

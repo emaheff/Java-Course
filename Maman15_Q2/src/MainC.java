@@ -29,11 +29,5 @@ public class MainC {
             dataWritersC[i].start();
             dataReadersC[i].start();
         }
-//        for (DataWriterC dataWriterC: dataWritersC){
-//            dataWriterC.start();
-//        }
-//        for (DataReaderC dataReaderC : dataReadersC) {
-//            dataReaderC.start();
-//        }
     }
 }
