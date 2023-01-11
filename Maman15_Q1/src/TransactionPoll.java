@@ -1,10 +1,11 @@
 import java.util.LinkedList;
+import java.util.Queue;
 
-public class Transactions {
+public class TransactionPoll {
 
-    private LinkedList<Transaction> transactions;
+    private Queue<Transaction> transactions;
 
-    public Transactions(LinkedList<Transaction> transactions){
+    public TransactionPoll(LinkedList<Transaction> transactions){
         this.transactions = transactions;
     }
 

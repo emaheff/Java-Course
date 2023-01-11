@@ -1,36 +1,35 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Teller extends Thread {
+    private TransactionPoll transactionPoll;
+    private Map<String,BankAccount> accounts;
 
-    private ArrayList<BankAccount> accounts;
-    private Transactions transactions;
-
-    public Teller(ArrayList<BankAccount> accounts, Transactions transactions) {
-        this.accounts = accounts;
-        this.transactions = transactions;
+    public Teller(ArrayList<BankAccount> accounts, TransactionPoll transactionPoll) {
+        this.transactionPoll = transactionPoll;
+        this.accounts = new HashMap<>();
+        for (BankAccount account: accounts){
+            this.accounts.put(account.getAccountNumber(), account);
+        }
     }
 
     @Override
     public void run() {
         super.run();
-        while (!transactions.isTransactionsEmpty()) {
-            Transaction transaction = transactions.getTransaction();
+        while (!transactionPoll.isTransactionsEmpty()) {
+            Transaction transaction = transactionPoll.getTransaction();
             if (transaction != null){
-                BankAccount account = getAccount(transaction);
+                BankAccount account = accounts.get(transaction.getAccountNumber());
                 if (account != null){
                     account.transaction(transaction);
                 }
             }
-        }
-    }
-
-    private BankAccount getAccount(Transaction transaction) {
-        String accountNumber = transaction.getAccountNumber();
-        for (BankAccount current : accounts) {
-            if (current.getAccountNumber().equals(accountNumber)) {
-                return current;
+            try {
+                Thread.sleep((int)(Math.random() * 101));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
-        return null;
     }
 }
