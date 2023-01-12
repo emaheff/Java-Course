@@ -8,10 +8,13 @@ public class DataA {
     }
 
     public int getDiff(){
-        return (Math.abs(x - y));
+        int diff = (Math.abs(x - y));
+        System.out.println("Reader) diff = " + diff);
+        return diff;
     }
     public void update(int dx, int dy){
         x += dx;
         y += dy;
+        System.out.println("Writer) dx = " + dx + " ,dy = " + dy + " ====>>> x = " + x + ", y = " + y);
     }
 }

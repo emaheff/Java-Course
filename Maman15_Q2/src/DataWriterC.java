@@ -1,7 +1,7 @@
 public class DataWriterC extends Thread  {
     private static final int ITERATIONS_COUNT = 3;
     private static final int RANGE = 10;
-    private static final int TIME = 200;
+    private static final int TIME = 300;
     private DataC dataC;
 
     public DataWriterC(DataC dataC){
@@ -14,7 +14,6 @@ public class DataWriterC extends Thread  {
             int dx = (int)(Math.random() * RANGE);
             int dy = (int)(Math.random() * RANGE);
             dataC.update(dx, dy);
-            System.out.println("Writer" + (i+1) + ") dx = " + dx + " ,dy = " + dy);
             try {
                 sleep(TIME);
             } catch (InterruptedException e) {

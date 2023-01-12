@@ -10,6 +10,7 @@ public class DataC {
     public int getDiff() {
         lockRead();
         int diff = Math.abs(x - y);
+        System.out.println("Reader) diff = " + diff);
         unlockRead();
         return diff;
     }
@@ -18,6 +19,7 @@ public class DataC {
         lockWrite();
         x += dx;
         y += dy;
+        System.out.println("Writer) dx = " + dx + " ,dy = " + dy + " ====>>> x = " + x + ", y = " + y);
         unlockWrite();
     }
 

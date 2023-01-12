@@ -1,6 +1,7 @@
 public class DataReaderB extends Thread {
 
     private static final int ITERATIONS_COUNT = 10;
+    private static final int TIME = 300;
     private DataB dataB;
 
     public DataReaderB(DataB dataB){
@@ -10,10 +11,9 @@ public class DataReaderB extends Thread {
     @Override
     public void run(){
         for (int i = 0; i < ITERATIONS_COUNT; i++){
-            int diff =  dataB.getDiff();
-            System.out.println("Reader" + (i+1) + ") diff = " + diff);
+            dataB.getDiff();
             try {
-                sleep(100);
+                sleep(TIME);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
